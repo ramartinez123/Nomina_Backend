@@ -75,7 +75,7 @@ public class Empleado {
     private EstadoCivil estadoCivil;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "genero", length = 10) // Longitud adecuada para los valores del enum
+    @Column(name = "genero", length = 10) 
     private Genero genero;
 
     @ManyToOne

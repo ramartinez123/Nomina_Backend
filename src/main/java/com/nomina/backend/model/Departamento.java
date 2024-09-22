@@ -16,7 +16,7 @@ public class Departamento {
     private String nombre;
 
     @Column(length = 100)
-    private String descripcion; // Descripción opcional del departamento
+    private String descripcion; 
 
     @OneToMany(mappedBy = "departamento")
     private List<Empleado> empleados;

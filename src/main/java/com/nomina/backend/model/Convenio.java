@@ -18,7 +18,7 @@ public class Convenio {
     @Column(length = 100)
     private String descripcion;
 
-    @OneToMany(mappedBy = "convenio", cascade = CascadeType.ALL)  // Relación con Empleado
+    @OneToMany(mappedBy = "convenio", cascade = CascadeType.ALL)  
     private List<Empleado> empleados;
 
     // Getters y Setters

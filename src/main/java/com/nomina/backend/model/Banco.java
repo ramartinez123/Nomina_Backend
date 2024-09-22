@@ -16,9 +16,9 @@ public class Banco {
     private String nombre;
 
     @Column(length = 50)
-    private String descripcion; // Descripción opcional del banco
+    private String descripcion; 
 
-    @OneToMany(mappedBy = "banco", cascade = CascadeType.ALL) // Relación con Empleado
+    @OneToMany(mappedBy = "banco", cascade = CascadeType.ALL) 
     private List<Empleado> empleados;
 
     // Getters y Setters

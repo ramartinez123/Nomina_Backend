@@ -16,9 +16,9 @@ public class Puesto {
     private String nombre;
 
     @Column(length = 100)
-    private String descripcion; // Descripción opcional del puesto
+    private String descripcion; 
 
-    @OneToMany(mappedBy = "puesto", cascade = CascadeType.ALL) // Relación con Empleado
+    @OneToMany(mappedBy = "puesto", cascade = CascadeType.ALL) 
     private List<Empleado> empleados;
 
     // Getters y Setters

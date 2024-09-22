@@ -14,15 +14,15 @@ public class Categoria {
 
     @ManyToOne
     @JoinColumn(name = "id_convenio", nullable = false)
-    private Convenio convenio; // Relación con la tabla convenios
+    private Convenio convenio; 
 
     @Column(nullable = false, length = 60)
     private String nombre;
 
     @Column(length = 50)
-    private String descripcion; // Descripción opcional de la categoría
+    private String descripcion; 
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL) // Relación con Empleado
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private List<Empleado> empleados;
 
     // Getters y Setters
