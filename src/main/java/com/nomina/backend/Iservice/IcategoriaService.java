@@ -10,5 +10,5 @@ public interface IcategoriaService {
 	public Optional<Categoria> listIdCategoria(int id);
 	public int saveCategoria(Categoria categoria);
 	public boolean deleteCategoria(int id);
-	public List<Categoria> findByCategoriaName(String name);
+	public List<Categoria> findByNombre(String name);
 }

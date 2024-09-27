@@ -10,5 +10,6 @@ public interface IconvenioService {
 	public Optional<Convenio> listIdConvenio(int id);
 	public int saveConvenio(Convenio convenio);
 	public boolean deleteConvenio(int id);
-	public List<Convenio> findByConvenioName(String name);
+	public List<Convenio> findByNombre(String name);
+	public Optional<Convenio> findById(Integer idConvenio);
 }

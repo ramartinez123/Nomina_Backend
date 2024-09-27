@@ -10,5 +10,5 @@ public interface IpuestoService {
 	public Optional<Puesto> listIdPuesto(int id);
 	public int savePuesto(Puesto puesto);
 	public boolean deletePuesto(int id);
-	public List<Puesto> findByPuestoName(String name);
+	public List<Puesto> findByNombre(String name);
 }

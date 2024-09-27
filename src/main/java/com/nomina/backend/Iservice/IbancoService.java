@@ -10,5 +10,5 @@ import com.nomina.backend.model.Banco;
 		public Optional<Banco> listIdBanco(int id);
 		public int saveBanco(Banco banco);
 		public boolean deleteBanco(int id);
-		public List<Banco> findByBancoName(String name);
+		public List<Banco> findByNombre(String name);
 	}

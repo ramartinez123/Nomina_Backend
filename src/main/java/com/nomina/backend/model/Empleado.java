@@ -46,7 +46,7 @@ public class Empleado {
     @JoinColumn(name = "id_convenio")
     private Convenio convenio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
@@ -85,7 +85,7 @@ public class Empleado {
     @Column(length = 22, unique = true)
     private String cbu;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_banco")
     private Banco banco;
 

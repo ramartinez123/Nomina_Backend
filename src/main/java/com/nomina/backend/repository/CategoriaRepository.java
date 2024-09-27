@@ -10,5 +10,5 @@ import com.nomina.backend.model.Categoria;
 
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
-	List<Categoria> findByCategoriaName(String name);
+	List<Categoria> findByNombre(String name);
 }

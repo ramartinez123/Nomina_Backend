@@ -53,7 +53,7 @@ public class PuestoService implements IpuestoService {
     }
 
     @Override
-    public List<Puesto> findByPuestoName(String name) {
-        return puestoRepository.findByPuestoName(name); // Busca puestos por su nombre
+    public List<Puesto> findByNombre(String nombre) {
+        return puestoRepository.findByNombre(nombre); // Busca puestos por su nombre
     }
 }

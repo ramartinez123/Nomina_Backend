@@ -53,7 +53,7 @@ public class ProvinciaService implements IprovinciaService {
     }
 
     @Override
-    public List<Provincia> findByProvinciaName(String name) {
-        return provinciaRepository.findByProvinciaName(name); // Busca provincias por su nombre
+    public List<Provincia> findByNombre(String nombre) {
+        return provinciaRepository.findByNombre(nombre); // Busca provincias por su nombre
     }
 }

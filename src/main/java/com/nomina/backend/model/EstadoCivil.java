@@ -1,10 +1,10 @@
 package com.nomina.backend.model;
 
 public enum EstadoCivil {
-    SOLTERO("soltero"),
-    CASADO("casado"),
-    DIVORCIADO("divorciado"),
-    VIUDO("viudo");
+    SOLTERO("SOLTERO"),
+    CASADO("CASADO"),
+    DIVORCIADO("DIVORCIADO"),
+    VIUDO("VIUDO");
 
     private final String estado;
 

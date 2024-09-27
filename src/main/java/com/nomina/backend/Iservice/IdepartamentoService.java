@@ -10,5 +10,5 @@ public interface IdepartamentoService {
 	public Optional<Departamento> listIdDepartamento(int id);
 	public int saveDepartamento(Departamento departamento);
 	public boolean deleteDepartamento(int id);
-	public List<Departamento> findByDepartamentoName(String name);
+	public List<Departamento> findByNombre(String name);
 }

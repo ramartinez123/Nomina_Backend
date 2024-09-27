@@ -10,5 +10,5 @@ import com.nomina.backend.model.ObraSocial;
 
 @Repository
 public interface ObraSocialRepository extends JpaRepository<ObraSocial, Integer> {
-	List<ObraSocial> findByObraSocialName(String name);
+	List<ObraSocial> findByNombre(String name);
 }

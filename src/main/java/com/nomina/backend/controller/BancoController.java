@@ -70,8 +70,8 @@ public class BancoController {
 
     // Buscar bancos por nombre
     @GetMapping("/search")
-    public ResponseEntity<List<Banco>> findByBancoName(@RequestParam String name) {
-        List<Banco> bancos = bancoService.findByBancoName(name);
+    public ResponseEntity<List<Banco>> findByNombre(@RequestParam String nombre) {
+        List<Banco> bancos = bancoService.findByNombre(nombre);
         return new ResponseEntity<>(bancos, HttpStatus.OK);
     }
 }

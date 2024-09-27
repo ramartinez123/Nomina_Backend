@@ -10,5 +10,5 @@ import com.nomina.backend.model.Convenio;
 
 @Repository
 public interface ConvenioRepository extends JpaRepository<Convenio, Integer> {
-	List<Convenio> findByConvenioName(String name);
+	List<Convenio> findByNombre(String name);
 }

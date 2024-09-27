@@ -53,8 +53,14 @@ public class ConvenioService implements IconvenioService {
     }
 
     @Override
-    public List<Convenio> findByConvenioName(String name) {
-        return convenioRepository.findByConvenioName(name); // Busca convenios por su nombre
+    public List<Convenio> findByNombre(String nombre) {
+        return convenioRepository.findByNombre(nombre); // Busca convenios por su nombre
     }
+
+	@Override
+	public Optional<Convenio> findById(Integer idConvenio) {
+		// TODO Auto-generated method stub
+		return convenioRepository.findById(idConvenio);
+	}
 
 }

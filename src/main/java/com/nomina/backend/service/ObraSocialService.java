@@ -53,7 +53,7 @@ public class ObraSocialService implements IobraSocialService {
     }
 
     @Override
-    public List<ObraSocial> findByObraSocialName(String name) {
-        return obraSocialRepository.findByObraSocialName(name); // Busca obras sociales por su nombre
+    public List<ObraSocial> findByNombre(String nombre) {
+        return obraSocialRepository.findByNombre(nombre); // Busca obras sociales por su nombre
     }
 }

@@ -10,5 +10,5 @@ import com.nomina.backend.model.Departamento;
 
 @Repository
 public interface DepartamentoRepository extends JpaRepository<Departamento, Integer> {
-	List<Departamento> findByDepartamentoName(String name);
+	List<Departamento> findByNombre(String name);
 }

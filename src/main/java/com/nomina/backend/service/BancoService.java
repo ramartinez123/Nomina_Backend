@@ -18,7 +18,7 @@ public class BancoService implements IbancoService {
 
     @Override
     public List<Banco> listBanco() {
-        return bancoRepository.findAll(); // Retorna todos los bancos
+        return (List<Banco>) bancoRepository.findAll();  // Retorna todos los bancos
     }
 
     @Override
@@ -55,7 +55,7 @@ public class BancoService implements IbancoService {
 	}
 
     @Override
-    public List<Banco> findByBancoName(String name) {
-        return bancoRepository.findByBancoName(name); // Busca bancos por su nombre
+    public List<Banco> findByNombre(String nombre) {
+        return bancoRepository.findByNombre(nombre); // Busca bancos por su nombre
     }
 }

@@ -1,10 +1,10 @@
 package com.nomina.backend.model;
 
 public enum TipoContrato {
-    PERMANENTE("permanente"),
-    TEMPORA("tempora"),
-    CONTRATO("contrato"),
-    PASANTE("pasante");
+    PERMANENTE("PERMANENTE"),
+    TEMPORA("TEMPORA"),
+    CONTRATO("CONTRATO"),
+    PASANTE("PASANTE");
 
     private final String tipo;
 

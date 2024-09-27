@@ -10,5 +10,5 @@ import com.nomina.backend.model.Empleado;
 
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
-	List<Empleado> findByEmpleadoName(String name);
+	List<Empleado> findByNombre(String name);
 }

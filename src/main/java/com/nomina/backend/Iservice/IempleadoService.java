@@ -9,5 +9,5 @@ public interface IempleadoService {
 	public Optional<Empleado> listIdEmpleado(int id);
 	public int saveEmpleado(Empleado empleado);
 	public boolean deleteEmpleado(int id);
-	public List<Empleado> findByEmpleadoName(String name);
+	public List<Empleado> findByNombre(String name);
 }

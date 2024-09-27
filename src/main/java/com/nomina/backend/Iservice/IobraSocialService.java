@@ -10,5 +10,5 @@ public interface IobraSocialService {
 	public Optional<ObraSocial> listIdObraSocial(int id);
 	public int saveObraSocial(ObraSocial obraSocial);
 	public boolean deleteObraSocial(int id);
-	public List<ObraSocial> findByObraSocialName(String name);
+	public List<ObraSocial> findByNombre(String name);
 }

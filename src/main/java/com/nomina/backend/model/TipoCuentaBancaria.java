@@ -1,9 +1,9 @@
 package com.nomina.backend.model;
 
 public enum TipoCuentaBancaria {
-    CUENTA_CORRIENTE("cuenta_corriente"),
-    CAJA_AHORRO("caja_ahorro"),
-    OTRA("otra");
+    CUENTA_CORRIENTE("CUENTA_CORRIENTE"),
+    CAJA_AHORRO("CAJA_AHORRO"),
+    OTRA("OTRA");
 
     private final String tipo;
 

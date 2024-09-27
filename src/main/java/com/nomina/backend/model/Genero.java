@@ -1,9 +1,9 @@
 package com.nomina.backend.model;
 
 public enum Genero {
-    MASCULINO("masculino"),
-    FEMENINO("femenino"),
-    OTRO("otro");
+    MASCULINO("MASCULINO"),
+    FEMENINO("FEMENINO"),
+    OTRO("OTRO");
 
     private final String genero;
 

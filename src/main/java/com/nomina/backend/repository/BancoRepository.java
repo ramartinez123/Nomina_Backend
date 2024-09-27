@@ -2,14 +2,13 @@ package com.nomina.backend.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.nomina.backend.model.Banco;
-import com.university.model.Course;
 
 @Repository
-public interface BancoRepository extends JpaRepository<Banco, Integer> {
-	List<Banco> findByBancoName(String name);
+public interface BancoRepository extends CrudRepository<Banco, Integer> {
+	List<Banco> findByNombre(String name);
 }
 	

@@ -53,7 +53,7 @@ public class DepartamentoService implements IdepartamentoService {
     }
 
     @Override
-    public List<Departamento> findByDepartamentoName(String name) {
-        return departamentoRepository.findByDepartamentoName(name); // Busca departamentos por su nombre
+    public List<Departamento> findByNombre(String nombre) {
+        return departamentoRepository.findByNombre(nombre); // Busca departamentos por su nombre
     }
 }

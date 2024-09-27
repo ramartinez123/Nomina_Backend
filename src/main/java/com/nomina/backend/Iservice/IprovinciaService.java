@@ -10,5 +10,5 @@ public interface IprovinciaService {
 	public Optional<Provincia> listIdProvincia(int id);
 	public int saveProvincia(Provincia provincia);
 	public boolean deleteProvincia(int id);
-	public List<Provincia> findByProvinciaName(String name);
+	public List<Provincia> findByNombre(String name);
 }

@@ -3,6 +3,7 @@ package com.nomina.backend.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+
 @Entity
 @Table(name = "convenios")
 public class Convenio {
