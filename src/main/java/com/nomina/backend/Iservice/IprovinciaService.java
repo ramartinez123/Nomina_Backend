@@ -7,7 +7,7 @@ import com.nomina.backend.model.Provincia;
 
 public interface IprovinciaService {
 	public List<Provincia>listProvincia();
-	public Optional<Provincia> listIdProvincia(int id);
+	public Optional<Provincia> findById(Integer id);
 	public int saveProvincia(Provincia provincia);
 	public boolean deleteProvincia(int id);
 	public List<Provincia> findByNombre(String name);

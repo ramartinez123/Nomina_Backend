@@ -16,21 +16,22 @@ public class CategoriaService implements IcategoriaService {
     @Autowired
     private CategoriaRepository categoriaRepository; // Inyección de dependencia del repositorio
 
+    
     @Override
     public List<Categoria> listCategoria() {
-        return categoriaRepository.findAll(); // Retorna todas las categorías
+        return categoriaRepository.findAll(); 
     }
 
-    @Override
-    public Optional<Categoria> listIdCategoria(int id) {
-        return categoriaRepository.findById(id); // Busca una categoría por su ID
-    }
-
+	@Override
+	public Optional<Categoria> findById(Integer id) {
+		return categoriaRepository.findById(id);
+	}
+    
     @Override
     public int saveCategoria(Categoria categoria) {
         try {
-            categoriaRepository.save(categoria); // Guarda la categoría en la base de datos
-            return 1; // Retorna el ID de la categoría guardada
+        	Categoria savedCategoria = categoriaRepository.save(categoria); // Guarda la categoría en la base de datos
+            return savedCategoria.getIdCategoria(); // Retorna el ID de la categoría guardada
         } catch (Exception e) {
             System.err.println("Error al guardar la categoría: " + e.getMessage());
             return -1;
@@ -56,4 +57,5 @@ public class CategoriaService implements IcategoriaService {
     public List<Categoria> findByNombre(String nombre) {
         return categoriaRepository.findByNombre(nombre); // Busca categorías por su nombre
     }
+
 }

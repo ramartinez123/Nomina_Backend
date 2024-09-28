@@ -6,7 +6,7 @@ import com.nomina.backend.model.Empleado;
 
 public interface IempleadoService {
 	public List<Empleado>listEmpleado();
-	public Optional<Empleado> listIdEmpleado(int id);
+	public Optional<Empleado> findById(Integer id);
 	public int saveEmpleado(Empleado empleado);
 	public boolean deleteEmpleado(int id);
 	public List<Empleado> findByNombre(String name);

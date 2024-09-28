@@ -22,9 +22,9 @@ public class ObraSocialService implements IobraSocialService {
     }
 
     @Override
-    public Optional<ObraSocial> listIdObraSocial(int id) {
-        return obraSocialRepository.findById(id); // Busca una obra social por su ID
-    }
+	public Optional<ObraSocial> findById(Integer id) {
+		return obraSocialRepository.findById(id);
+	}
 
     @Override
     public int saveObraSocial(ObraSocial obraSocial) {

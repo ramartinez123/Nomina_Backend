@@ -22,9 +22,9 @@ public class EmpleadoService implements IempleadoService {
     }
 
     @Override
-    public Optional<Empleado> listIdEmpleado(int id) {
-        return empleadoRepository.findById(id); // Busca un empleado por su ID
-    }
+	public Optional<Empleado> findById(Integer id) {
+		return empleadoRepository.findById(id);
+	}
 
     @Override
     public int saveEmpleado(Empleado empleado) {

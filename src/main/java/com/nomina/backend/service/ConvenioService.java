@@ -2,10 +2,8 @@ package com.nomina.backend.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nomina.backend.Iservice.IconvenioService;
 import com.nomina.backend.model.Convenio;
 import com.nomina.backend.repository.ConvenioRepository; // Asegúrate de que este repositorio existe
@@ -21,10 +19,10 @@ public class ConvenioService implements IconvenioService {
         return convenioRepository.findAll(); // Retorna todos los convenios
     }
 
-    @Override
-    public Optional<Convenio> listIdConvenio(int id) {
-        return convenioRepository.findById(id); // Busca un convenio por su ID
-    }
+	@Override
+	public Optional<Convenio> findById (Integer id) {
+		return convenioRepository.findById(id);
+	}
 
     @Override
     public int saveConvenio(Convenio convenio) {
@@ -57,10 +55,6 @@ public class ConvenioService implements IconvenioService {
         return convenioRepository.findByNombre(nombre); // Busca convenios por su nombre
     }
 
-	@Override
-	public Optional<Convenio> findById(Integer idConvenio) {
-		// TODO Auto-generated method stub
-		return convenioRepository.findById(idConvenio);
-	}
+
 
 }

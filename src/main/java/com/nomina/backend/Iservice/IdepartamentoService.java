@@ -7,7 +7,7 @@ import com.nomina.backend.model.Departamento;
 
 public interface IdepartamentoService {
 	public List<Departamento>listDepartamento();
-	public Optional<Departamento> listIdDepartamento(int id);
+	public Optional<Departamento> findById(Integer id);
 	public int saveDepartamento(Departamento departamento);
 	public boolean deleteDepartamento(int id);
 	public List<Departamento> findByNombre(String name);

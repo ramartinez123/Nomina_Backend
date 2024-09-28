@@ -22,9 +22,9 @@ public class PuestoService implements IpuestoService {
     }
 
     @Override
-    public Optional<Puesto> listIdPuesto(int id) {
-        return puestoRepository.findById(id); // Busca un puesto por su ID
-    }
+	public Optional<Puesto> findById(Integer id) {
+		return puestoRepository.findById(id);
+	}
 
     @Override
     public int savePuesto(Puesto puesto) {

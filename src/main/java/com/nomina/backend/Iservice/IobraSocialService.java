@@ -7,7 +7,7 @@ import com.nomina.backend.model.ObraSocial;
 
 public interface IobraSocialService {
 	public List<ObraSocial>listObraSocial();
-	public Optional<ObraSocial> listIdObraSocial(int id);
+	public Optional<ObraSocial> findById(Integer id);
 	public int saveObraSocial(ObraSocial obraSocial);
 	public boolean deleteObraSocial(int id);
 	public List<ObraSocial> findByNombre(String name);

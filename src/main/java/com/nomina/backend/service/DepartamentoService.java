@@ -22,9 +22,9 @@ public class DepartamentoService implements IdepartamentoService {
     }
 
     @Override
-    public Optional<Departamento> listIdDepartamento(int id) {
-        return departamentoRepository.findById(id); // Busca un departamento por su ID
-    }
+	public Optional<Departamento> findById(Integer id) {
+		return departamentoRepository.findById(id);
+	}
 
     @Override
     public int saveDepartamento(Departamento departamento) {

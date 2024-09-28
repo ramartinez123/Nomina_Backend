@@ -21,10 +21,10 @@ public class BancoService implements IbancoService {
         return (List<Banco>) bancoRepository.findAll();  // Retorna todos los bancos
     }
 
-    @Override
-    public Optional<Banco> listIdBanco(int id) {
-        return bancoRepository.findById(id); // Busca un banco por su ID
-    }
+	@Override
+	public Optional<Banco> findById(Integer id) {
+		return bancoRepository.findById(id);
+	}
 
     @Override
     public int saveBanco(Banco banco) {

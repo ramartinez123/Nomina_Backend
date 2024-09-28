@@ -22,9 +22,9 @@ public class ProvinciaService implements IprovinciaService {
     }
 
     @Override
-    public Optional<Provincia> listIdProvincia(int id) {
-        return provinciaRepository.findById(id); // Busca una provincia por su ID
-    }
+	public Optional<Provincia> findById(Integer id) {
+		return provinciaRepository.findById(id);
+	}
 
     @Override
     public int saveProvincia(Provincia provincia) {

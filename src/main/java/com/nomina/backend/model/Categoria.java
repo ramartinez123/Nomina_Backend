@@ -3,8 +3,6 @@ package com.nomina.backend.model;
 import jakarta.persistence.*;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "categorias_convenio")
 public class Categoria {
@@ -25,7 +23,6 @@ public class Categoria {
     private String descripcion; 
 
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Empleado> empleados;
 
     // Getters y Setters
