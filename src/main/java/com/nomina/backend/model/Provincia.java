@@ -1,6 +1,9 @@
 package com.nomina.backend.model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,7 +18,8 @@ public class Provincia {
     @Column(nullable = false, length = 40)
     private String nombre;
     
-    @OneToMany(mappedBy = "provincia")
+    @OneToMany(mappedBy = "provincia", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @JsonIgnore
     private List<Empleado> empleados;
 
     // Constructor vacío

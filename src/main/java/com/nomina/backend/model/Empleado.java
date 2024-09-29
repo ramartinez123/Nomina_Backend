@@ -96,6 +96,9 @@ public class Empleado {
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_contrato", nullable = false)
     private TipoContrato tipoContrato;
+    
+    @Column(length = 22, unique = true)
+    private String cuil;
 
     // Getters y Setters
 
@@ -306,4 +309,12 @@ public class Empleado {
     public void setTipoContrato(TipoContrato tipoContrato) {
         this.tipoContrato = tipoContrato;
     }
+
+	public String getCuil() {
+		return cuil;
+	}
+	
+	public void setCuil(String cuil) {
+	        this.cuil = cuil;
+	    }
 }

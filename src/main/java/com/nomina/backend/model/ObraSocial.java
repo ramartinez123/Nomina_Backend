@@ -2,6 +2,7 @@ package com.nomina.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "obras_sociales")
@@ -18,7 +19,8 @@ public class ObraSocial {
     @Column(length = 100)
     private String descripcion; // Descripción opcional de la obra social
 
-    @OneToMany(mappedBy = "obraSocial", cascade = CascadeType.ALL) // Relación con Empleado
+    @OneToMany(mappedBy = "obraSocial", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @JsonIgnore
     private List<Empleado> empleados;
 
     // Getters y Setters

@@ -2,6 +2,7 @@ package com.nomina.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -19,7 +20,8 @@ public class Convenio {
     @Column(length = 100)
     private String descripcion;
 
-    @OneToMany(mappedBy = "convenio", cascade = CascadeType.ALL)  
+    @OneToMany(mappedBy = "convenio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Empleado> empleados;
 
     // Getters y Setters
