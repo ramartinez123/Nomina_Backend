@@ -23,6 +23,10 @@ public class Convenio {
     @OneToMany(mappedBy = "convenio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Empleado> empleados;
+    
+    @OneToMany(mappedBy = "convenio", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<AdicionalPermanencia> adicionalPermanencia;
 
     // Getters y Setters
     public Integer getIdConvenio() {

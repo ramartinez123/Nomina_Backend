@@ -1,0 +1,49 @@
+/*  	LocalDate fechaIngreso = null;
+                    LocalDate fechaLiquidacionLocal = null;
+                    DetalleLiquidacion detalle3 = new DetalleLiquidacion();
+
+                    if (empleado.getFechaInicio() != null) {
+                        fechaIngreso = empleado.getFechaInicio().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        System.out.println(fechaIngreso);
+                    } else {
+                        System.out.println("El empleado o su fecha de inicio son nulos.");
+                    
+                    }
+
+                    if (fechaLiquidacion != null) {
+                        fechaLiquidacionLocal = fechaLiquidacion.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    }
+
+                    // Asegurarse de que las fechas no sean nulas
+                    if (fechaIngreso != null && fechaLiquidacionLocal != null) {
+                        // Calcular antigüedad en años
+                        int añosAntiguedad = Period.between(fechaIngreso, fechaLiquidacionLocal).getYears();
+
+                        // Validar que los años de antigüedad estén dentro del rango de 1 a 21
+                        if (añosAntiguedad >= 1 && añosAntiguedad <= 21) {
+                            // Recorrer la tabla adicionalPermanencia para encontrar el monto
+                            Optional<AdicionalPermanencia> adicionalOpt = adicionalPermanenciaRepository.findById(añosAntiguedad);
+                            if (adicionalOpt.isPresent()) {
+                                AdicionalPermanencia adicional = adicionalOpt.get();
+                                Integer montoAdicional = adicional.getMonto();
+
+                                // Crear detalle de liquidación para el adicional por permanencia
+                                detalle3.setEmpleado(empleado); 
+                                detalle3.setPeriodo(periodo);
+                                detalle3.setConceptoSalarialI(5);
+                                detalle3.setMonto(montoAdicional);
+                                detalle3.setFechaLiquidacion(fechaLiquidacion);
+                                System.out.println(detalle3);
+                                detalleLiquidacionRepository.save(detalle3);
+                            } else {
+                                System.out.println("No se encontró adicional por permanencia para la antigüedad: " + añosAntiguedad);
+                            }
+                        } else {
+                            System.out.println("La antigüedad debe estar entre 1 y 21 años: " + añosAntiguedad);
+                        }
+                    } else {
+                        System.out.println("Las fechas de ingreso o liquidación son nulas.");
+                    }
+                    
+                } */
+            } 

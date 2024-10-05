@@ -24,6 +24,9 @@ public class Categoria {
 
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Empleado> empleados;
+    
+    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<HistoricoValoresCategoria> historicoValores; // Relación inversa
 
     // Getters y Setters
     public Integer getIdCategoria() {

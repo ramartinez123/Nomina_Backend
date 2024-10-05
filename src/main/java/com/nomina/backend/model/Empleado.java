@@ -1,5 +1,9 @@
 package com.nomina.backend.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -97,12 +101,31 @@ public class Empleado {
     @Column(name = "tipo_contrato", nullable = false)
     private TipoContrato tipoContrato;
     
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @JsonIgnore
+    private List<DetalleLiquidacion> detalleLiquidaciones;
+    
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @JsonIgnore
+    private List<SalarioExcedente> salarioExcedente;
+    
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
+    @JsonIgnore
+    private List<NovedadLiquidacion> novedadLiquidaciones;
+    
     @Column(length = 22, unique = true)
     private String cuil;
 
     // Getters y Setters
+    
+    public Empleado() {
+    }
 
-    public Integer getId() {
+    public Empleado(Integer id) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getId() {
         return id;
     }
 
