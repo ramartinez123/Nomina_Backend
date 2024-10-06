@@ -6,10 +6,8 @@
 	import java.util.List;
 	import java.util.Map;
 	import java.util.stream.Collectors;
-	
 	import org.springframework.beans.factory.annotation.Autowired;
-	import org.springframework.stereotype.Service;
-	
+	import org.springframework.stereotype.Service;	
 	import com.nomina.backend.model.ConceptoSalarial;
 	import com.nomina.backend.model.DetalleLiquidacion;
 	import com.nomina.backend.model.Empleado;
@@ -18,7 +16,7 @@
 	import com.nomina.backend.repository.EmpleadoRepository;
 	
 	@Service
-	public class LiquidacionTotalesHaberesService {
+	public class LiquidacionTotalesRetencionesService {
 
 	    @Autowired
 	    private DetalleLiquidacionRepository detalleLiquidacionRepository;
@@ -29,9 +27,6 @@
 	    @Autowired
 	    private ConceptoSalarialRepository conceptoSalarialRepository;
 	    
-	    @Autowired
-	    private LiquidacionRetencionesService liquidacionRetencionesService;
-
 	    public void sumarConceptosYRegistrar() {
 	        // Obtener la fecha actual
 	        Date fechaActual = new Date(System.currentTimeMillis());
@@ -47,16 +42,14 @@
 
 	        // Filtrar los detalles para los conceptos del 1 al 89
 	        List<DetalleLiquidacion> detallesFiltrados = detalles.stream()
-	            .filter(detalle -> detalle.getConceptoSalarial().getId() >= 1 && detalle.getConceptoSalarial().getId() <= 89)
+	            .filter(detalle -> detalle.getConceptoSalarial().getId() >= 101 && detalle.getConceptoSalarial().getId() <= 189)
 	            .collect(Collectors.toList());
-	        System.out.println("Detalles Filtrados (Conceptos 1 a 89): " + detallesFiltrados.size());
+	        System.out.println("Detalles Filtrados (Conceptos 101 a 189): " + detallesFiltrados.size());
 
 	        // Mapas para acumular montos por empleado
 	        Map<Integer, Integer> sumaImpAportesPorEmpleado = new HashMap<>();
 	        Map<Integer, Integer> sumaImpGananciasPorEmpleado = new HashMap<>();
-	        Map<Integer, Integer> sumaImpIndemnizacionPorEmpleado = new HashMap<>();
-	        Map<Integer, Integer> sumaSueldoMensualPorEmpleado = new HashMap<>();
-	        Map<Integer, Integer> sumaImpAguianldoPorEmpleado = new HashMap<>();
+
 
 	        // Iterar sobre los detalles
 	        for (DetalleLiquidacion detalle : detallesFiltrados) {
@@ -74,31 +67,15 @@
 	                
 	            }
 
-	            if (detalle.getConceptoSalarial().getImpIndemnizacion()) {
-	            	sumaImpIndemnizacionPorEmpleado.merge(empleadoId, monto, Integer::sum);
-	               
-	            }
-	            
-	            if (detalle.getConceptoSalarial().getSueldoTotal()) {
-	            	sumaSueldoMensualPorEmpleado.merge(empleadoId, monto, Integer::sum);
-	               
-	            }
-	            
-	            if (detalle.getConceptoSalarial().getImpSac()) {
-	            	sumaImpAguianldoPorEmpleado.merge(empleadoId, monto, Integer::sum);
-	                
-	            }
 
 	        }
 
 	        // Registrar los totales por empleado
-	        registrarTotalesPorConcepto(sumaImpAportesPorEmpleado, fechaActual, fechaInicio, 91); // true para ImpAportes
-	        registrarTotalesPorConcepto(sumaImpGananciasPorEmpleado, fechaActual, fechaInicio, 92); // false para ImpGanancias
-	        registrarTotalesPorConcepto(sumaImpIndemnizacionPorEmpleado, fechaActual, fechaInicio, 93);
-	        registrarTotalesPorConcepto(sumaSueldoMensualPorEmpleado, fechaActual, fechaInicio, 94);
-	        registrarTotalesPorConcepto(sumaImpAguianldoPorEmpleado, fechaActual, fechaInicio, 95);
+	        registrarTotalesPorConcepto(sumaImpAportesPorEmpleado, fechaActual, fechaInicio, 191); // true para ImpAportes
+	        registrarTotalesPorConcepto(sumaImpGananciasPorEmpleado, fechaActual, fechaInicio, 192); // false para ImpGanancias
+
 	        
-	        liquidacionRetencionesService.procesarYRegistrarNuevosDetalles();
+	      
 
 	    }
 

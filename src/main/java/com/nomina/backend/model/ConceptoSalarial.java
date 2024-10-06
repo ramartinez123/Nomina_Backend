@@ -17,7 +17,7 @@ public class ConceptoSalarial {
     @Column(name = "nombre", nullable = false, length = 60)
     private String nombre; // Nombre del concepto salarial
 
-    @Column(name = "descripcion", columnDefinition = "TEXT")
+    @Column(name = "descripcion", nullable = false, length = 60)
     private String descripcion; // Descripción detallada del concepto
 
     @Enumerated(EnumType.STRING)
@@ -46,7 +46,7 @@ public class ConceptoSalarial {
     @Column(name = "valor")
     private Integer valor; // Valor asociado (monto fijo, porcentaje o NULL si es calculado)
 
-    @Column(name = "formula", length = 80)
+    @Column(name = "formula", length = 60)
     private String formula; // Fórmula para el cálculo (si aplica)
 
     @Column(name = "fecha_inicio", nullable = false)
