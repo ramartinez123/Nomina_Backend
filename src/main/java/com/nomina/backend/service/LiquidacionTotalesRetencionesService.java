@@ -27,6 +27,9 @@
 	    @Autowired
 	    private ConceptoSalarialRepository conceptoSalarialRepository;
 	    
+	    @Autowired
+	    private LiquidacionImpuestoGananciasService liquidacionImpuestoGananciasService;
+	    
 	    public void sumarConceptosYRegistrar() {
 	        // Obtener la fecha actual
 	        Date fechaActual = new Date(System.currentTimeMillis());
@@ -74,7 +77,7 @@
 	        registrarTotalesPorConcepto(sumaImpAportesPorEmpleado, fechaActual, fechaInicio, 191); // true para ImpAportes
 	        registrarTotalesPorConcepto(sumaImpGananciasPorEmpleado, fechaActual, fechaInicio, 192); // false para ImpGanancias
 
-	        
+	        liquidacionImpuestoGananciasService.calcularImpuestoGananciasTodos(fechaActual);
 	      
 
 	    }
@@ -103,6 +106,8 @@
 	            // Guardar el registro en la base de datos
 	            detalleLiquidacionRepository.save(nuevoRegistro);
 	        }
+	        
+	     
 	      
 	    }
 	    

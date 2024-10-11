@@ -113,6 +113,10 @@ public class Empleado {
     @JsonIgnore
     private List<NovedadLiquidacion> novedadLiquidaciones;
     
+    @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Familiar> familiares; // Asegúrate de que este nombre coincida con el nombre de la propiedad en Familiares
+    
     @Column(length = 22, unique = true)
     private String cuil;
 

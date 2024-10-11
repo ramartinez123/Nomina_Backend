@@ -126,6 +126,8 @@
 	            // Guardar el registro en la base de datos
 	            detalleLiquidacionRepository.save(nuevoRegistro);
 	        }
+	        
+	        
 	      
 	    }
 	    

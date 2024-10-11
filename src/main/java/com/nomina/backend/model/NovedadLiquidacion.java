@@ -53,6 +53,7 @@ public class NovedadLiquidacion {
     }
 
 
+
     public Date getFechaInicio() {
         return fechaInicio;
     }
