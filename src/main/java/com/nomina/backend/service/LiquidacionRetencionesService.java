@@ -3,14 +3,19 @@ package com.nomina.backend.service;
 import com.nomina.backend.model.ConceptoSalarial;
 import com.nomina.backend.model.DetalleLiquidacion;
 import com.nomina.backend.model.Empleado;
+import com.nomina.backend.model.NovedadLiquidacion;
 import com.nomina.backend.repository.ConceptoSalarialRepository;
 import com.nomina.backend.repository.DetalleLiquidacionRepository;
+import com.nomina.backend.repository.NovedadLiquidacionRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LiquidacionRetencionesService {
@@ -23,6 +28,9 @@ public class LiquidacionRetencionesService {
     
     @Autowired
     private LiquidacionTotalesRetencionesService liquidacionTotalesRetencionesService;
+    
+    @Autowired
+    private NovedadLiquidacionRepository novedadLiquidacionRepository;
 
     public void procesarYRegistrarNuevosDetalles() {
         Date fechaActual = new Date(System.currentTimeMillis());
@@ -53,6 +61,50 @@ public class LiquidacionRetencionesService {
                 }
             }
         }
+        
+        
+        
+        
+        /*List<Integer> conceptoIds = List.of(180, 186);
+        
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date fechaFin = new Date(calendar.getTimeInMillis());
+        List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
+        
+        Map<Integer, Integer> sumaPorEmpleado = new HashMap<>();
+    	
+        for (NovedadLiquidacion novedad : novedades) {
+            
+            List<DetalleLiquidacion> detallesR = detalleLiquidacionRepository.findByEmpleado_Id(novedad.getEmpleado().getId());
+    
+
+            for (DetalleLiquidacion detalle : detallesR) {
+                
+                if (List.of(2, 3, 4, 5).contains(detalle.getConceptoSalarial().getId())) {
+                    sumaPorEmpleado.merge(novedad.getEmpleado().getId(), detalle.getMonto(), Integer::sum);
+                   
+                }
+            }
+        }*/
+        List<Integer> conceptoIds = List.of(185);
+        Date fechaFin = new Date(calendar.getTimeInMillis());
+        List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
+        for (NovedadLiquidacion novedad : novedades) {
+            Integer empleadoId = novedad.getEmpleado().getId();
+            Integer cantidadNovedades = novedad.getCantidad();
+
+            // Verificar el concepto para aplicar la fórmula adecuada
+            if (novedad.getConcepto().getId() == 185) {
+                int resultado =  cantidadNovedades;
+
+                DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();
+                nuevoDetalle.setEmpleado(novedad.getEmpleado());
+                nuevoDetalle.setConceptoSalarial(novedad.getConcepto());
+                nuevoDetalle.setMonto(resultado);
+                nuevoDetalle.setFechaLiquidacion(fechaActual);
+                nuevoDetalle.setPeriodo(fechaInicio); // Establecer como primer día del mes actual
+
+                detalleLiquidacionRepository.save(nuevoDetalle);}}
         liquidacionTotalesRetencionesService.sumarConceptosYRegistrar();
     }
 

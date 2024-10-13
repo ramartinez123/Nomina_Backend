@@ -88,5 +88,11 @@ public class DetalleLiquidacion {
 		
 	}
 
+	public void setEmpleado(int empleadoId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 }

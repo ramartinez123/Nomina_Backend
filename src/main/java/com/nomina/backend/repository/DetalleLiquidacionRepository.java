@@ -14,5 +14,5 @@ public interface DetalleLiquidacionRepository extends JpaRepository<DetalleLiqui
     List<DetalleLiquidacion> findByEmpleado_Id(Integer empleadoId);
     List<DetalleLiquidacion> findByConceptoSalarial_Id(Integer conceptoSalarialId);
     @Query("SELECT dl.monto FROM DetalleLiquidacion dl WHERE dl.empleado.id = :empleadoId AND dl.conceptoSalarial.id = :conceptoId")
-    int obtenerValorConcepto(@Param("empleadoId") int empleadoId, @Param("conceptoId") int conceptoId);
+    Integer obtenerValorConcepto(@Param("empleadoId") int empleadoId, @Param("conceptoId") int conceptoId);
 }
