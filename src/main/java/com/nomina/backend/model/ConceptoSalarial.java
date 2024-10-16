@@ -46,6 +46,10 @@ public class ConceptoSalarial {
     @Column(name = "valor")
     private Integer valor; // Valor asociado (monto fijo, porcentaje o NULL si es calculado)
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "cuenta_contable",nullable = true)
+    private CuentaContable cuentaContable; // Valor asociado (monto fijo, porcentaje o NULL si es calculado)
+    
     @Column(name = "formula", length = 60)
     private String formula; // Fórmula para el cálculo (si aplica)
 
@@ -164,6 +168,15 @@ public class ConceptoSalarial {
 
     public void setValor(Integer valor) {
         this.valor = valor;
+           
+    }
+    
+    public CuentaContable getCuentaContable() {
+        return cuentaContable;
+    }
+
+    public void setCuentaContable(CuentaContable cuentaContable) {
+        this.cuentaContable = cuentaContable;
     }
 
     public String getFormula() {
@@ -201,6 +214,10 @@ public class ConceptoSalarial {
     public List<SalarioExcedente> getSalarioExcedente() {
         return salarioExcedente;
     }
+
+
+
+
     
 }
 

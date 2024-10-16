@@ -63,13 +63,17 @@ public class Empleado {
 
     @Column(name = "fecha_fin")
     private java.sql.Date fechaFin;
-
-    @Column(name = "dias_vacaciones_pactadas")
-    private Integer diasVacacionesPactadas;
-
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_empleado", nullable = false)
     private EstadoEmpleado estadoEmpleado;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "motivo", nullable = true)
+    private Motivo motivo;
+
+    @Column(name = "dias_vacaciones_pactadas")
+    private Integer diasVacacionesPactadas;
 
     @Column(length = 20)
     private String nacionalidad;
@@ -271,6 +275,14 @@ public class Empleado {
 
     public void setEstadoEmpleado(EstadoEmpleado estadoEmpleado) {
         this.estadoEmpleado = estadoEmpleado;
+    }
+    
+    public Motivo getMotivo() {
+        return motivo;
+    }
+
+    public void setMotivo(Motivo motivo) {
+        this.motivo = motivo;
     }
 
     public String getNacionalidad() {

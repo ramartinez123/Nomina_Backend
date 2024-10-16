@@ -86,7 +86,7 @@ public class LiquidacionRetencionesService {
                 }
             }
         }*/
-        List<Integer> conceptoIds = List.of(185);
+        List<Integer> conceptoIds = List.of(185,285);
         Date fechaFin = new Date(calendar.getTimeInMillis());
         List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
         for (NovedadLiquidacion novedad : novedades) {
@@ -94,7 +94,7 @@ public class LiquidacionRetencionesService {
             Integer cantidadNovedades = novedad.getCantidad();
 
             // Verificar el concepto para aplicar la fórmula adecuada
-            if (novedad.getConcepto().getId() == 185) {
+            if (novedad.getConcepto().getId() == 185 || novedad.getConcepto().getId() == 285) {
                 int resultado =  cantidadNovedades;
 
                 DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();

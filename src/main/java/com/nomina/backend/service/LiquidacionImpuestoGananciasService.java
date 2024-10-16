@@ -44,7 +44,7 @@ public class LiquidacionImpuestoGananciasService {
     public Map<Integer, Integer> calcularImpuestoGananciasTodos(Date mesLiquidacion) {
     	
     	
-        List<Empleado> empleados = empleadoRepository.findAll(); 
+    	List<Empleado> empleados = empleadoRepository.findAll(); 
         Map<Integer, Integer> resultados = new HashMap<>();
         
         for (Empleado empleado : empleados) {
@@ -118,6 +118,7 @@ public class LiquidacionImpuestoGananciasService {
     	System.out.println("Concepto 85: " + valorConcepto85);
     	System.out.println("Concepto 192: " + valorConcepto192);
     	System.out.println("Concepto 185: " + valorConcepto185);
+    	System.out.println("Concepto 285: " + valorConcepto285);
     	System.out.println("Ganancia No Imponible: " + gananciaNoImponible);
     	System.out.println("Deducción Especial: " + deduccionEspecial);
     	System.out.println("Deducción por Esposa: " + deduccionPorEsposa);
@@ -151,6 +152,7 @@ public class LiquidacionImpuestoGananciasService {
     		System.out.println("Impuesto Parcial: " + impuestoParcial);
 
     		int impuestoTotal = impuestoParcial + escala.getFijo();
+    		int impMes = impuestoTotal - valorConcepto285;
 
     		// Mostrar el valor de escala.getFijo() y el resultado de impuestoTotal
     		System.out.println("Escala Fijo: " + escala.getFijo());
@@ -167,15 +169,17 @@ public class LiquidacionImpuestoGananciasService {
             DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();
             nuevoDetalle.setEmpleado(empleado);
             nuevoDetalle.setConceptoSalarial(concepto);
-    		nuevoDetalle.setMonto(impuestoTotal);
+    		nuevoDetalle.setMonto(impMes);
             nuevoDetalle.setFechaLiquidacion(fechaActual);
             nuevoDetalle.setPeriodo(fechaInicio); // Establecer como primer día del mes actual
-            detalleLiquidacionRepository.save(nuevoDetalle);
+            
+	            if (nuevoDetalle.getMonto() != 0){
+	            	detalleLiquidacionRepository.save(nuevoDetalle);
+	            }
+            
 
 
         } 
-    	
-    	
 
     	return imponibleImpuestoGanancias;
     }
@@ -196,8 +200,7 @@ public class LiquidacionImpuestoGananciasService {
 
 
     	// Calcular el valor final del impuesto
-    	int sueldoNeto = (valorConcepto91 - valorConcepto191 - valorConcepto230) ;
-    	
+    	int sueldoNeto = (valorConcepto91 - valorConcepto191 - valorConcepto230) ;   	
 
     	Date fechaActual = new Date(System.currentTimeMillis());
     	
@@ -217,7 +220,12 @@ public class LiquidacionImpuestoGananciasService {
 		nuevoDetalle.setMonto(sueldoNeto);
         nuevoDetalle.setFechaLiquidacion(fechaActual);
         nuevoDetalle.setPeriodo(fechaInicio); // Establecer como primer día del mes actual
-        detalleLiquidacionRepository.save(nuevoDetalle);
+        
+        if (nuevoDetalle.getMonto() != 0){
+        	detalleLiquidacionRepository.save(nuevoDetalle);
+        
+        }
+       
 
 		return sueldoNeto;
 }}
