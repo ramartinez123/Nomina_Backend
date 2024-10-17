@@ -31,9 +31,17 @@ public class SalarioExcedente {
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
-    // Constructor por defecto
+    // Constructor vacio
     public SalarioExcedente() {}
 
+    public SalarioExcedente(Empleado empleado, ConceptoSalarial conceptoSalarial, int valor, Date fechaInicio, Date fechaFin) {
+        this.empleado = empleado;
+        this.conceptoSalarial = conceptoSalarial;
+        this.valor = valor;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+    }
+    
     // Getters y setters
     public int getId() {
         return id;

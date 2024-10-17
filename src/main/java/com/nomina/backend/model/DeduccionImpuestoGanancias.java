@@ -1,15 +1,7 @@
 package com.nomina.backend.model;
 
 import java.util.Date;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "deduccion_impuesto_ganancias")
@@ -36,6 +28,20 @@ public class DeduccionImpuestoGanancias {
 
     @Column(name = "valor", nullable = false)
     private int valor;
+    
+ // Constructor vacío
+    public DeduccionImpuestoGanancias() {
+    }
+
+    // Constructor lleno
+    public DeduccionImpuestoGanancias(int idDeduccion, Integer idTipoDeduccion, String nombre, Date fechaInicio, Date fechaFin, int valor) {
+        this.idDeduccion = idDeduccion;
+        this.idTipoDeduccion = idTipoDeduccion;
+        this.nombre = nombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.valor = valor;
+    }   
 
     // Getters y Setters
     public int getIdDeduccion() {

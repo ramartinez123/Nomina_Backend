@@ -1,12 +1,6 @@
 package com.nomina.backend.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
+
+import jakarta.persistence.*;
 
 @Entity
 public class AdicionalPermanencia {
@@ -17,7 +11,7 @@ public class AdicionalPermanencia {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_convenio", referencedColumnName = "id_convenio")
-    private Convenio convenio; // Cambiar de Integer a Convenio
+    private Convenio convenio; 
     
     @Column(name = "anos_antiguedad")
     private Integer anosAntiguedad;

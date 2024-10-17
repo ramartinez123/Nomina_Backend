@@ -1,7 +1,6 @@
 package com.nomina.backend.model;
 
 import java.util.Date;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -10,33 +9,45 @@ public class EscalaGanancias {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // ID autogenerado
+    private Integer id; 
 
     @Column(name = "fechaInicio", nullable = true)
     @Temporal(TemporalType.DATE)
-    private Date fechaInicio; // Fecha de inicio
+    private Date fechaInicio; 
 
     @Temporal(TemporalType.DATE)
     @Column(name = "fechaFin", nullable = true)
-    private Date fechaFin; // Fecha de fin
+    private Date fechaFin;
 
     @Column(name = "desde", nullable = false)
-    private int desde; // Rango desde
+    private int desde; 
 
     @Column(name = "hasta", nullable = false)
-    private int hasta; // Rango hasta
+    private int hasta; 
 
     @Column(name = "fijo", nullable = false)
-    private int fijo; // Valor fijo
+    private int fijo; 
 
     @Column(name = "porcentaje", nullable = false)
-    private int porcentaje; // Porcentaje
+    private int porcentaje; 
 
     @Column(name = "excedente", nullable = false)
-    private int excedente; // Excedente
+    private int excedente; 
 
-    // Constructor vacío
-    public EscalaGanancias() {}
+ // Constructor vacío
+    public EscalaGanancias() {
+    }
+
+    // Constructor lleno
+    public EscalaGanancias(Date fechaInicio, Date fechaFin, int desde, int hasta, int fijo, int porcentaje, int excedente) {
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.desde = desde;
+        this.hasta = hasta;
+        this.fijo = fijo;
+        this.porcentaje = porcentaje;
+        this.excedente = excedente;
+    }
 
     // Getters y Setters
     public Integer getId() {

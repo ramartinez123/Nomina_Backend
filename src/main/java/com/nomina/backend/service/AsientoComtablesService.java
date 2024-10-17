@@ -32,7 +32,6 @@ public class AsientoComtablesService {
         List<Empleado> empleados = empleadoRepository.findAll(); // Obtener todos los empleados
         Map<CuentaContable, Integer> sumaPorCuentaContable = new HashMap<>();
         
-        int totalMontoParaCuentaAdicional1 = 0;
         int totalMontoParaCuentaAdicional2 = 0;
 
         for (Empleado empleado : empleados) {

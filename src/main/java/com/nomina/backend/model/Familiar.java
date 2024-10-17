@@ -12,35 +12,35 @@ public class Familiar {
     private int id;
 
     @Column(name = "id_parentesco", nullable = false, length = 40)
-    private String idParentesco; // 'H' para hijo, 'C' para cónyuge
-
+    private String idParentesco; 
+    
     @ManyToOne
-    @JoinColumn(name = "id_empleado") // Asegúrate de que este nombre coincida con el de la base de datos
+    @JoinColumn(name = "id_empleado") 
     private Empleado empleado;
 
     @Column(name = "apellido_nombre", nullable = false, length = 60)
-    private String apellidoNombre; // Nombre completo del familiar
+    private String apellidoNombre; 
 
     @Column(name = "fecha_nacimiento", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date fechaNacimiento; // Fecha de nacimiento del familiar
+    private Date fechaNacimiento; 
 
     @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date fechaInicio; // Fecha de inicio de la relación de carga
+    private Date fechaInicio; 
 
     @Column(name = "fecha_fin")
     @Temporal(TemporalType.DATE)
-    private Date fechaFin; // Fecha de fin de la relación de carga
+    private Date fechaFin; 
     
     @Column(name = "a_cargo", nullable = false)
-    private boolean aCargo; // Indica si esta a cargo Ganancias
+    private boolean aCargo; 
     
     @Column(name = "a_cargo_osocial", nullable = false)
-    private boolean aCargoOSocial; // Indica si esta a cargo Ganancias
+    private boolean aCargoOSocial; 
 
     @Column(name = "tiene_discapacidad", nullable = false)
-    private boolean tieneDiscapacidad; // Indica si tiene discapacidad
+    private boolean tieneDiscapacidad; 
     
     
     

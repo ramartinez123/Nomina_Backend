@@ -31,7 +31,19 @@ public class DetalleLiquidacion {
     @Temporal(TemporalType.DATE)
     private Date fechaLiquidacion;
 
-    public DetalleLiquidacion() {}
+ // Constructor vacío
+    public DetalleLiquidacion() {
+    }
+
+    // Constructor lleno
+    public DetalleLiquidacion(int id, Empleado empleado, Date periodo, ConceptoSalarial conceptoSalarial, int monto, Date fechaLiquidacion) {
+        this.id = id;
+        this.empleado = empleado;
+        this.periodo = periodo;
+        this.conceptoSalarial = conceptoSalarial;
+        this.monto = monto;
+        this.fechaLiquidacion = fechaLiquidacion;
+    }
 
     // Getters y Setters
 

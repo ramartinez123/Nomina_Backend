@@ -10,28 +10,39 @@ public class HistoricoValoresCategoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id; // Identificador único
-
+    private Integer id; 
+    
     @ManyToOne // Relación con Categoria
     @JoinColumn(name = "id_categoria", nullable = false)
-    private Categoria categoria; // Referencia a la categoría
+    private Categoria categoria; 
 
     @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date fechaInicio; // Fecha de inicio
+    private Date fechaInicio; 
 
     @Column(name = "fecha_baja")
     @Temporal(TemporalType.DATE)
-    private Date fechaBaja; // Fecha de baja
+    private Date fechaBaja; 
 
     @Column(name = "salario")
-    private Integer salario; // Salario correspondiente
+    private Integer salario; 
 
     @Column(name = "almuerzo", nullable = false)
-    private Integer almuerzo; // Valor del almuerzo
+    private Integer almuerzo; 
 
-    // Constructor por defecto
-    public HistoricoValoresCategoria() {}
+ // Constructor vacío
+    public HistoricoValoresCategoria() {
+    }
+
+    // Constructor lleno
+    public HistoricoValoresCategoria(Categoria categoria, Date fechaInicio, Date fechaBaja, Integer salario, Integer almuerzo) {
+        this.categoria = categoria;
+        this.fechaInicio = fechaInicio;
+        this.fechaBaja = fechaBaja;
+        this.salario = salario;
+        this.almuerzo = almuerzo;
+    }
+
 
     // Getters y Setters
 

@@ -28,6 +28,18 @@ public class Convenio {
     @JsonIgnore
     private List<AdicionalPermanencia> adicionalPermanencia;
 
+    public Convenio() {
+    }
+
+    // Constructor lleno
+    public Convenio(String nombre, String descripcion, List<Empleado> empleados, List<AdicionalPermanencia> adicionalPermanencia) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.empleados = empleados;
+        this.adicionalPermanencia = adicionalPermanencia;
+    }
+         
+    
     // Getters y Setters
     public Integer getIdConvenio() {
         return idConvenio;

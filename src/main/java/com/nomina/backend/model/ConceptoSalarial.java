@@ -3,7 +3,6 @@ package com.nomina.backend.model;
 import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -12,54 +11,54 @@ public class ConceptoSalarial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // Identificador único del concepto
+    private Integer id; 
 
     @Column(name = "nombre", nullable = false, length = 60)
-    private String nombre; // Nombre del concepto salarial
+    private String nombre; 
 
     @Column(name = "descripcion", nullable = false, length = 60)
-    private String descripcion; // Descripción detallada del concepto
+    private String descripcion; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
-    private TipoConcepto tipo; // Tipo de concepto (remunerativo, aportes, descuentos, no remunerativos)
+    private TipoConcepto tipo; 
 
     @Column(name = "imp_aportes", nullable = false)
-    private Boolean impAportes; // Indica si es imponible a aportes
+    private Boolean impAportes; 
 
     @Column(name = "imp_ganancias", nullable = false)
-    private Boolean impGanancias; // Indica si es imponible a ganancias
-
+    private Boolean impGanancias;
+    
     @Column(name = "imp_indemnizacion", nullable = false)
-    private Boolean impIndemnizacion; // Indica si impacta para indemnización
+    private Boolean impIndemnizacion; 
 
     @Column(name = "imp_sac", nullable = false)
-    private Boolean impSac; // Indica si impacta en el cálculo del aguinaldo
+    private Boolean impSac; 
 
     @Column(name = "sueldo_total", nullable = false)
-    private Boolean sueldoTotal; // Indica si el concepto es acumulador
-
+    private Boolean sueldoTotal; 
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_valor", nullable = false)
-    private TipoValor tipoValor; // Tipo de valor (fijo, porcentaje, calculado)
+    private TipoValor tipoValor; 
 
     @Column(name = "valor")
-    private Integer valor; // Valor asociado (monto fijo, porcentaje o NULL si es calculado)
+    private Integer valor; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cuenta_contable",nullable = true)
-    private CuentaContable cuentaContable; // Valor asociado (monto fijo, porcentaje o NULL si es calculado)
+    private CuentaContable cuentaContable; 
     
     @Column(name = "formula", length = 60)
-    private String formula; // Fórmula para el cálculo (si aplica)
+    private String formula; 
 
     @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date fechaInicio; // Fecha de inicio de vigencia del concepto
+    private Date fechaInicio; 
 
     @Column(name = "fecha_fin")
     @Temporal(TemporalType.DATE)
-    private Date fechaFin; // Fecha de fin de vigencia del concepto
+    private Date fechaFin; 
     
     @OneToMany(mappedBy = "conceptoSalarial", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
     @JsonIgnore
@@ -73,14 +72,41 @@ public class ConceptoSalarial {
     @JsonIgnore
     private List<NovedadLiquidacion> novedadLiquidaciones;
     
- // Getters y Setters
-    
     public ConceptoSalarial() {
+    }
+
+    // Constructor lleno
+    public ConceptoSalarial(String nombre, String descripcion, TipoConcepto tipo, Boolean impAportes,
+                             Boolean impGanancias, Boolean impIndemnizacion, Boolean impSac,
+                             Boolean sueldoTotal, TipoValor tipoValor, Integer valor,
+                             CuentaContable cuentaContable, String formula, Date fechaInicio,
+                             Date fechaFin, List<DetalleLiquidacion> detalleLiquidaciones,
+                             List<SalarioExcedente> salarioExcedente, List<NovedadLiquidacion> novedadLiquidaciones) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.tipo = tipo;
+        this.impAportes = impAportes;
+        this.impGanancias = impGanancias;
+        this.impIndemnizacion = impIndemnizacion;
+        this.impSac = impSac;
+        this.sueldoTotal = sueldoTotal;
+        this.tipoValor = tipoValor;
+        this.valor = valor;
+        this.cuentaContable = cuentaContable;
+        this.formula = formula;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.detalleLiquidaciones = detalleLiquidaciones;
+        this.salarioExcedente = salarioExcedente;
+        this.novedadLiquidaciones = novedadLiquidaciones;
     }
 
     public ConceptoSalarial(Integer id) {
 		// TODO Auto-generated constructor stub
 	}
+  
+ // Getters y Setters
+      
 
 	public Integer getId() {
         return id;
@@ -214,10 +240,6 @@ public class ConceptoSalarial {
     public List<SalarioExcedente> getSalarioExcedente() {
         return salarioExcedente;
     }
-
-
-
-
     
 }
 

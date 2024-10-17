@@ -4,5 +4,4 @@ public enum TipoValor {
     FIJO,
     PORCENTAJE,
     CALCULADO
-
 }

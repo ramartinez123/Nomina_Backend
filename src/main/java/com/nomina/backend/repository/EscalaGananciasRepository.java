@@ -9,8 +9,6 @@ import java.util.Date;
 
 @Repository
 public interface EscalaGananciasRepository extends JpaRepository<EscalaGanancias, Integer> {
-    
-    // Método personalizado para buscar el rango donde cae el valor y la fecha de liquidación esté dentro del periodo
     EscalaGanancias findByDesdeLessThanEqualAndHastaGreaterThanEqualAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
         int desde, 
         int hasta, 

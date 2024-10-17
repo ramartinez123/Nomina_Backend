@@ -17,11 +17,22 @@ public class ObraSocial {
     private String nombre;
 
     @Column(length = 100)
-    private String descripcion; // Descripción opcional de la obra social
-
+    private String descripcion; 
+    
     @OneToMany(mappedBy = "obraSocial", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
     @JsonIgnore
     private List<Empleado> empleados;
+    
+    // Constructor vacío
+    public ObraSocial() {
+    }
+
+    // Constructor lleno
+    public ObraSocial(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
+    
 
     // Getters y Setters
     public Integer getIdObraSocial() {

@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class LiquidacionRetencionesService {
@@ -90,7 +88,6 @@ public class LiquidacionRetencionesService {
         Date fechaFin = new Date(calendar.getTimeInMillis());
         List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
         for (NovedadLiquidacion novedad : novedades) {
-            Integer empleadoId = novedad.getEmpleado().getId();
             Integer cantidadNovedades = novedad.getCantidad();
 
             // Verificar el concepto para aplicar la fórmula adecuada

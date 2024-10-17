@@ -26,7 +26,21 @@ public class Categoria {
     private List<Empleado> empleados;
     
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<HistoricoValoresCategoria> historicoValores; // Relación inversa
+    private List<HistoricoValoresCategoria> historicoValores; 
+    
+ // Constructor vacío
+    public Categoria() {
+    }
+
+    // Constructor lleno
+    public Categoria(Convenio convenio, String nombre, String descripcion, List<Empleado> empleados, List<HistoricoValoresCategoria> historicoValores) {
+        this.convenio = convenio;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.empleados = empleados;
+        this.historicoValores = historicoValores;
+    }
+    
 
     // Getters y Setters
     public Integer getIdCategoria() {

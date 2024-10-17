@@ -1,9 +1,7 @@
 package com.nomina.backend.model;
 
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -23,8 +21,14 @@ public class Provincia {
     private List<Empleado> empleados;
 
     // Constructor vacío
-    public Provincia() {}
+    public Provincia() {
+    }
 
+    // Constructor lleno
+    public Provincia(String nombre) {
+        this.nombre = nombre;
+    }
+         
     // Getters y Setters
     public Integer getIdProvincia() {
         return idProvincia;

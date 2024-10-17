@@ -1,9 +1,8 @@
 package com.nomina.backend.model;
 
+import java.util.Date;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -24,7 +23,8 @@ public class Empleado {
     private String dni;
 
     @Column(name = "fecha_nacimiento", nullable = false)
-    private java.sql.Date fechaNacimiento;
+    @Temporal(TemporalType.DATE)
+    private Date fechaNacimiento;
 
     @Column(nullable = false, unique = true, length = 40)
     private String email;
@@ -59,10 +59,12 @@ public class Empleado {
     private Puesto puesto;
 
     @Column(name = "fecha_inicio", nullable = false)
-    private java.sql.Date fechaInicio;
+    @Temporal(TemporalType.DATE)
+    private Date fechaInicio;
 
     @Column(name = "fecha_fin")
-    private java.sql.Date fechaFin;
+    @Temporal(TemporalType.DATE)
+    private Date fechaFin;
     
     @Enumerated(EnumType.STRING)
     @Column(name = "estado_empleado", nullable = false)
@@ -124,7 +126,48 @@ public class Empleado {
     @Column(length = 22, unique = true)
     private String cuil;
 
-    // Getters y Setters
+ // Constructor lleno
+    public Empleado(Integer id, String nombre, String apellido, String dni, Date fechaNacimiento, String email, String telefono, 
+                    String direccion, String ciudad, Provincia provincia, Departamento departamento, Convenio convenio, 
+                    Categoria categoria, Puesto puesto, Date fechaInicio, Date fechaFin, EstadoEmpleado estadoEmpleado, 
+                    Motivo motivo, Integer diasVacacionesPactadas, String nacionalidad, EstadoCivil estadoCivil, 
+                    Genero genero, ObraSocial obraSocial, String cbu, Banco banco, TipoCuentaBancaria tipoCuentaBancaria, 
+                    TipoContrato tipoContrato, List<DetalleLiquidacion> detalleLiquidaciones, 
+                    List<SalarioExcedente> salarioExcedente, List<NovedadLiquidacion> novedadLiquidaciones, 
+                    List<Familiar> familiares, String cuil) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.dni = dni;
+        this.fechaNacimiento = (java.sql.Date) fechaNacimiento;
+        this.email = email;
+        this.telefono = telefono;
+        this.direccion = direccion;
+        this.ciudad = ciudad;
+        this.provincia = provincia;
+        this.departamento = departamento;
+        this.convenio = convenio;
+        this.categoria = categoria;
+        this.puesto = puesto;
+        this.fechaInicio = (java.sql.Date) fechaInicio;
+        this.fechaFin = (java.sql.Date) fechaFin;
+        this.estadoEmpleado = estadoEmpleado;
+        this.motivo = motivo;
+        this.diasVacacionesPactadas = diasVacacionesPactadas;
+        this.nacionalidad = nacionalidad;
+        this.estadoCivil = estadoCivil;
+        this.genero = genero;
+        this.obraSocial = obraSocial;
+        this.cbu = cbu;
+        this.banco = banco;
+        this.tipoCuentaBancaria = tipoCuentaBancaria;
+        this.tipoContrato = tipoContrato;
+        this.detalleLiquidaciones = detalleLiquidaciones;
+        this.salarioExcedente = salarioExcedente;
+        this.novedadLiquidaciones = novedadLiquidaciones;
+        this.familiares = familiares;
+        this.cuil = cuil;
+    }
     
     public Empleado() {
     }
@@ -132,6 +175,8 @@ public class Empleado {
     public Empleado(Integer id) {
 		// TODO Auto-generated constructor stub
 	}
+    
+ // Getters y Setters
 
 	public Integer getId() {
         return id;
@@ -165,7 +210,7 @@ public class Empleado {
         this.dni = dni;
     }
 
-    public java.sql.Date getFechaNacimiento() {
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
@@ -245,7 +290,7 @@ public class Empleado {
         this.puesto = puesto;
     }
 
-    public java.sql.Date getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
@@ -253,7 +298,7 @@ public class Empleado {
         this.fechaInicio = fechaInicio;
     }
 
-    public java.sql.Date getFechaFin() {
+    public Date getFechaFin() {
         return fechaFin;
     }
 

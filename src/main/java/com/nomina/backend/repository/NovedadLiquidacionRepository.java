@@ -14,7 +14,7 @@ import com.nomina.backend.model.NovedadLiquidacion;
 
 @Repository
 public interface NovedadLiquidacionRepository extends JpaRepository<NovedadLiquidacion, Integer> {
-	 // Método para buscar novedades por concepto y rango de fecha
+	
     @Query("SELECT n FROM NovedadLiquidacion n WHERE n.conceptoSalarial.id IN :ids AND n.fechaInicio BETWEEN :fechaInicio AND :fechaFin")
     List<NovedadLiquidacion> findByConceptoSalarialIdAndFecha(@Param("ids") List<Integer> ids, 
                                                                 @Param("fechaInicio") Date fechaInicio, 

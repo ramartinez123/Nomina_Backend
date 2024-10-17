@@ -2,7 +2,6 @@ package com.nomina.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -23,6 +22,16 @@ public class Banco {
     @OneToMany(mappedBy = "banco", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
     @JsonIgnore
     private List<Empleado> empleados;
+    
+    // Constructor vacío
+    public Banco() {}
+
+    // Constructor con parámetros
+    public Banco(Integer idBanco, String nombre, String descripcion) {
+        this.idBanco = idBanco;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
 
     // Getters y Setters
     public Integer getIdBanco() {

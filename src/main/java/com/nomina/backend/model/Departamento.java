@@ -23,7 +23,19 @@ public class Departamento {
     @OneToMany(mappedBy = "departamento", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Empleado> empleados;
+    
+    // Constructor vacío
+    public Departamento() {
+    }
 
+    // Constructor lleno
+    public Departamento(Integer idDepartamento, String nombre, String descripcion, List<Empleado> empleados) {
+        this.idDepartamento = idDepartamento;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.empleados = empleados;
+    }
+      
     // Getters y Setters
     public Integer getIdDepartamento() {
         return idDepartamento;

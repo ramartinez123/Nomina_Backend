@@ -5,10 +5,14 @@ import java.util.Optional;
 
 import com.nomina.backend.model.Banco;
 
-	public interface IbancoService {
-		public List<Banco>listBanco();
-		public Optional<Banco> findById(Integer id);
-		public int saveBanco(Banco banco);
-		public boolean deleteBanco(int id);
-		public List<Banco> findByNombre(String name);
-	}
+public interface IbancoService {
+	public List<Banco> listBanco();
+
+	public Optional<Banco> findById(Integer id);
+
+	public int saveBanco(Banco banco);
+
+	public boolean deleteBanco(int id);
+
+	public List<Banco> findByNombre(String name);
+}

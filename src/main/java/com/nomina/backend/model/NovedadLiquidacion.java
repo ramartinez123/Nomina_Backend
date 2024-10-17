@@ -9,23 +9,34 @@ public class NovedadLiquidacion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // Identificador único
+    private Integer id; 
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idConcepto", nullable = false)
-    private ConceptoSalarial conceptoSalarial; // Referencia al concepto salarial
+    private ConceptoSalarial conceptoSalarial; 
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idEmpleado", nullable = false) // Nueva referencia a Empleado
-    private Empleado empleado; // Referencia al empleado
-
+    @JoinColumn(name = "idEmpleado", nullable = false) 
+    private Empleado empleado; 
 
     @Column(name = "fechaInicio", nullable = false)
     @Temporal(TemporalType.DATE)
     private java.sql.Date fechaInicio;
 
     @Column(name = "cantidad", nullable = false)
-    private Integer cantidad; // Cantidad asociada a la novedad
+    private Integer cantidad; 
+    
+    // Constructor vacío
+    public NovedadLiquidacion() {
+    }
+
+    // Constructor lleno
+    public NovedadLiquidacion(ConceptoSalarial conceptoSalarial, Empleado empleado, Date fechaInicio, Integer cantidad) {
+        this.conceptoSalarial = conceptoSalarial;
+        this.empleado = empleado;
+        this.fechaInicio = fechaInicio;
+        this.cantidad = cantidad;
+    }  
 
     // Getters y Setters
     public Integer getId() {
@@ -51,8 +62,6 @@ public class NovedadLiquidacion {
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
     }
-
-
 
     public Date getFechaInicio() {
         return fechaInicio;
