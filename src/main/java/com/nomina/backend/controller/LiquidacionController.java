@@ -5,11 +5,16 @@ import com.nomina.backend.service.AnulaBajaEmpleadoService;
 import com.nomina.backend.service.AsientoComtablesService;
 import com.nomina.backend.service.BajaEmpleadoService;
 import com.nomina.backend.service.LiquidacionCargasSocialesService;
-import com.nomina.backend.service.LiquidacionServiceSueldo;
+import com.nomina.backend.service.LiquidacionImpuestoGananciasService;
+import com.nomina.backend.service.LiquidacionNovedadesService;
+import com.nomina.backend.service.LiquidacionRetencionesService;
+import com.nomina.backend.service.LiquidacionSueldoService;
+import com.nomina.backend.service.LiquidacionTotalesHaberesService;
 import com.nomina.backend.service.LiquidacionSueldoIdService;
 
 import jakarta.persistence.EntityNotFoundException;
 
+import java.sql.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +23,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/liquidacion") // Define el path base para el controlador
+@RequestMapping("/api/liquidacion") 
 public class LiquidacionController {
 
     @Autowired
-    private LiquidacionServiceSueldo liquidacionService;
+    private LiquidacionSueldoService liquidacionService;
     
     @Autowired
     private LiquidacionSueldoIdService liquidacionServiceById;
+    
+    @Autowired
+    private LiquidacionNovedadesService liquidacionNovedadesService;
+    
+    @Autowired
+    private LiquidacionTotalesHaberesService liquidacionTotalesHaberesService;
+    
+    @Autowired
+    private LiquidacionRetencionesService liquidacionRetencionesService;
+    
+    @Autowired
+    private LiquidacionImpuestoGananciasService liquidacionImpuestoGananciasService;
     
     @Autowired
     private BajaEmpleadoService darDeBajaEmpleado;
@@ -39,7 +56,7 @@ public class LiquidacionController {
     @Autowired
     private AsientoComtablesService asientoComtablesService;
 
-    @PostMapping("/realizar") // Define el endpoint para realizar la liquidación
+    @PostMapping("/realizar") 
     public ResponseEntity<String> realizarLiquidacion() {
         try {
             liquidacionService.realizarLiquidacion(); // Llama al servicio para realizar la liquidación
@@ -49,7 +66,48 @@ public class LiquidacionController {
         }
     }
     
-    @PostMapping("/realizarById/{id}") // Define el endpoint para realizar la liquidación por ID
+    @PostMapping("/novedades") 
+    public ResponseEntity<String> procesarNovedades() {
+        try {
+        	liquidacionNovedadesService.procesarNovedades(); // Llama al servicio para realizar la liquidación
+            return ResponseEntity.ok("Liquidación realizada exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping("/totalesHaberes") 
+    public ResponseEntity<String> liquidacionTotalesHaberesService() {
+        try {
+        	liquidacionTotalesHaberesService.sumarConceptosYRegistrar(); // Llama al servicio para realizar la liquidación
+            return ResponseEntity.ok("Liquidación realizada exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping("/retenciones") 
+    public ResponseEntity<String> liquidacionRetencionesService() {
+        try {
+        	liquidacionRetencionesService.procesarYRegistrarNuevosDetalles(); // Llama al servicio para realizar la liquidación
+            return ResponseEntity.ok("Liquidación realizada exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping("/ganancias/{date}") 
+    public ResponseEntity<String> liquidacionImpuestoGananciasService(@PathVariable String date) {
+        try {
+        	Date fechaLiquidacion = Date.valueOf(date);
+        	liquidacionImpuestoGananciasService.calcularImpuestoGananciasTodos(fechaLiquidacion); // Llama al servicio para realizar la liquidación
+            return ResponseEntity.ok("Liquidación realizada exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
+        }
+    }
+    
+    @PostMapping("/realizarById/{id}") 
     public ResponseEntity<String> realizarLiquidacionById(@PathVariable Integer id) {
         try {
             liquidacionServiceById.realizarLiquidacionPorEmpleado(id); // Llama al servicio con el ID del empleado
@@ -59,10 +117,10 @@ public class LiquidacionController {
         }
     }
     
-    @PostMapping("/cargasSociales") // Define el endpoint para realizar la liquidación
+    @PostMapping("/cargasSociales") 
     public ResponseEntity<String> procesarCargasSociales() {
         try {
-            liquidacionCargasSocialesService.procesarCargasSociales(); // Llama al servicio para realizar la liquidación
+            liquidacionCargasSocialesService.procesarCargasSociales(); 
             return ResponseEntity.ok("Liquidación de Cargas Sociales 	realizada exitosamente");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
@@ -70,9 +128,12 @@ public class LiquidacionController {
     }
     
     @PutMapping("/darDeBaja/{id}")
-    public ResponseEntity<String> darDeBajaEmpleado(@PathVariable Integer id, @RequestParam java.sql.Date fechaFin, @RequestParam String motivo) {
+    public ResponseEntity<String> darDeBajaEmpleado(
+            @PathVariable Integer id,
+            @RequestParam java.sql.Date fechaFin,
+            @RequestParam String motivo) {
         try {
-            darDeBajaEmpleado.darDeBajaEmpleado(id, fechaFin, motivo); // Llamada al servicio que realiza la baja del empleado
+            darDeBajaEmpleado.darDeBajaEmpleado(id, fechaFin, motivo); 
             return ResponseEntity.ok("Empleado dado de baja correctamente");
         } catch (EntityNotFoundException e) {
             // Si no se encuentra el empleado, se devuelve un 404 con un mensaje apropiado
@@ -81,12 +142,12 @@ public class LiquidacionController {
             // Si ocurre cualquier otro error, se devuelve un 500
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al dar de baja al empleado: " + e.getMessage());
         }
-    }
+    }	
     
     @PutMapping("/anularBaja/{id}")
     public ResponseEntity<String> anulaBajaEmpleado(@PathVariable Integer id) {
         try {
-            anulaBajaEmpleado.anulaBajaEmpleado(id); // Llamada al servicio que realiza la baja del empleado
+            anulaBajaEmpleado.anulaBajaEmpleado(id); 
             return ResponseEntity.ok("Empleado reactivado correctamente");
         } catch (EntityNotFoundException e) {
             // Si no se encuentra el empleado, se devuelve un 404 con un mensaje apropiado

@@ -5,10 +5,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.nomina.backend.model.ConceptoSalarial;
 import com.nomina.backend.model.DetalleLiquidacion;
 import com.nomina.backend.model.Empleado;
@@ -23,209 +23,183 @@ import com.nomina.backend.repository.FamiliarRepository;
 @Service
 public class LiquidacionImpuestoGananciasService {
 
-    @Autowired
-    private DetalleLiquidacionRepository detalleLiquidacionRepository;
-    
-    @Autowired
-    private FamiliarRepository familiarRepository;
-    
-    @Autowired
-    private DeduccionImpuestoGananciasRepository deduccionImpuestoGananciasRepository;
-    
-    @Autowired
-    private EmpleadoRepository empleadoRepository; 
-    
-    @Autowired
-    private EscalaGananciasRepository escalaGananciasRepository;
-    
-    @Autowired
-    private ConceptoSalarialRepository conceptoSalarialRepository;
-    
-    public Map<Integer, Integer> calcularImpuestoGananciasTodos(Date mesLiquidacion) {
-    	
-    	
-    	List<Empleado> empleados = empleadoRepository.findAll(); 
-        Map<Integer, Integer> resultados = new HashMap<>();
-        
-        for (Empleado empleado : empleados) {
-            int empleadoId = empleado.getId(); 
-            int impuesto = calcularImpuestoGanancias(empleadoId, mesLiquidacion);
-            resultados.put(empleadoId, impuesto); 
-            calcularSueldoNeto(empleadoId, mesLiquidacion);
-        }
-        
-        System.out.println("Resultados del cálculo de impuestos:");
-        for (Map.Entry<Integer, Integer> entry : resultados.entrySet()) {
-            System.out.println("Empleado ID: " + entry.getKey() + ", Impuesto Ganancias: " + entry.getValue());
-        }
-        
-       
-        
-        return resultados; 
-    }
+	private static final Logger logger = LoggerFactory.getLogger(LiquidacionImpuestoGananciasService.class); // Crear el logger
 
-    public int calcularImpuestoGanancias(int empleadoId, Date mesLiquidacion) {
-        // Obtener valores de conceptos 92 y 192 de detalleLiquidacion por empleado
+	@Autowired
+	private DetalleLiquidacionRepository detalleLiquidacionRepository;
 
-    	Integer valorConcepto92 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 92);
-    	valorConcepto92 = (valorConcepto92 != null) ? valorConcepto92 : 0;
+	@Autowired
+	private FamiliarRepository familiarRepository;
 
-    	Integer valorConcepto192 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 192);
-    	valorConcepto192 = (valorConcepto192 != null) ? valorConcepto192 : 0;
+	@Autowired
+	private DeduccionImpuestoGananciasRepository deduccionImpuestoGananciasRepository;
 
-    	Integer valorConcepto85 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 85);
-    	valorConcepto85 = (valorConcepto85 != null) ? valorConcepto85 : 0;
+	@Autowired
+	private EmpleadoRepository empleadoRepository; 
 
-    	Integer valorConcepto185 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 185);
-    	valorConcepto185 = (valorConcepto185 != null) ? valorConcepto185 : 0;
+	@Autowired
+	private EscalaGananciasRepository escalaGananciasRepository;
 
-    	Integer valorConcepto285 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 285);
-    	valorConcepto285 = (valorConcepto285 != null) ? valorConcepto285 : 0;
+	@Autowired
+	private ConceptoSalarialRepository conceptoSalarialRepository;
 
-    	// Obtener cantidad de cónyuges y hijos que cumplen las condiciones
-    	Integer cantidadConyuges = familiarRepository.contarConyuges(empleadoId, mesLiquidacion);
-    	cantidadConyuges = (cantidadConyuges != null) ? cantidadConyuges : 0;
+	Calendar calendar = Calendar.getInstance();
+	Date fechaActual = new Date(System.currentTimeMillis());
+		
+	
+	public Map<Integer, Integer> calcularImpuestoGananciasTodos(Date mesLiquidacion) {
+		List<Empleado> empleados = empleadoRepository.findAll(); 
+		Map<Integer, Integer> resultados = new HashMap<>();
 
-    	Integer cantidadHijos = familiarRepository.contarHijos(empleadoId, mesLiquidacion);
-    	cantidadHijos = (cantidadHijos != null) ? cantidadHijos : 0;
+		for (Empleado empleado : empleados) {
+			int empleadoId = empleado.getId(); 
+			int impuesto = calcularImpuestoGanancias(empleadoId, mesLiquidacion);
+			resultados.put(empleadoId, impuesto); 
+			calcularSueldoNeto(empleadoId, mesLiquidacion);
+		}
 
-    	// Obtener deducciones de impuesto para el mes de liquidación
-    	Integer gananciaNoImponible = deduccionImpuestoGananciasRepository.obtenerDeduccion(mesLiquidacion, 1);
-    	System.out.println("Ganancia No Imponible: " + gananciaNoImponible);
+		for (Map.Entry<Integer, Integer> entry : resultados.entrySet()) {
+			logger.info("Empleado ID: {}, Impuesto Ganancias: {}", entry.getKey(), entry.getValue());
+		}
 
-    	Integer deduccionEspecial = deduccionImpuestoGananciasRepository.obtenerDeduccion(mesLiquidacion, 5);
-    	System.out.println("Deducción Especial: " + deduccionEspecial);
+		return resultados; 
+	}	
 
-    	Integer deduccionPorEsposa = deduccionImpuestoGananciasRepository.obtenerDeduccion(mesLiquidacion, 2)*cantidadConyuges;
-    	deduccionPorEsposa = (deduccionPorEsposa != null) ? deduccionPorEsposa : 0;
+	
+	public int calcularImpuestoGanancias(int empleadoId, Date mesLiquidacion) {
+		// Obtener valores de conceptos 92 y 192 de detalleLiquidacion por empleado
 
-    	Integer deduccionPorHijo = deduccionImpuestoGananciasRepository.obtenerDeduccion(mesLiquidacion, 3)*cantidadHijos;
-    	deduccionPorHijo = (deduccionPorHijo != null) ? deduccionPorHijo : 0;
+		Integer valorConcepto92 = obtenerValorConcepto(empleadoId, 92);
+		Integer valorConcepto192 = obtenerValorConcepto(empleadoId, 192);
+		Integer valorConcepto85 = obtenerValorConcepto(empleadoId, 85);
+		Integer valorConcepto185 = obtenerValorConcepto(empleadoId, 185);
+		Integer valorConcepto285 = obtenerValorConcepto(empleadoId, 285);
+		
+		// Obtener cantidad de cónyuges y hijos que cumplen las condiciones
+		Integer cantidadConyuges = familiarRepository.contarConyuges(empleadoId, mesLiquidacion);
+		cantidadConyuges = (cantidadConyuges != null) ? cantidadConyuges : 0;
+
+		Integer cantidadHijos = familiarRepository.contarHijos(empleadoId, mesLiquidacion);
+		cantidadHijos = (cantidadHijos != null) ? cantidadHijos : 0;
+		
+		Integer gananciaNoImponible = obtenerValorDeduccion(mesLiquidacion, 1);
+		Integer deduccionEspecial = obtenerValorDeduccion(mesLiquidacion, 5);
+		Integer deduccionPorEsposa = obtenerValorDeduccion(mesLiquidacion, 2) * cantidadConyuges;	
+		Integer deduccionPorHijo = obtenerValorDeduccion(mesLiquidacion, 3) * cantidadHijos;
+
+		// Calcular el valor final del impuesto
+		int imponibleImpuestoGanancias = (valorConcepto92  - valorConcepto192 ) 
+				- gananciaNoImponible 
+				- deduccionEspecial 
+				- deduccionPorEsposa
+				- deduccionPorHijo;
+		
+		if (imponibleImpuestoGanancias <= 0) {
+	        logger.info("La base imponible es negativa o cero para empleado ID: {}. Impuesto de ganancias no aplicable.", empleadoId);
+	        return 0; // Si la base imponible es negativa o cero, no se calcula impuesto
+	    }
 
 
+		logger.info("Calculando impuesto para empleado ID: {}", empleadoId);
+		logger.info("Base Imponible: {}", imponibleImpuestoGanancias);     
+		logger.info("Valores obtenidos para el cálculo:");
+		logger.info("Concepto 92: {}", valorConcepto92);
+		logger.info("Concepto 85: {}", valorConcepto85);
+		logger.info("Concepto 192: {}", valorConcepto192);
+		logger.info("Concepto 185: {}", valorConcepto185);
+		logger.info("Concepto 285: {}", valorConcepto285);
+		logger.info("Ganancia No Imponible: {}", gananciaNoImponible);
+		logger.info("Deducción Especial: {}", deduccionEspecial);
+		logger.info("Deducción por Esposa: {}", deduccionPorEsposa);
+		logger.info("Deducción por Hijo: {}", deduccionPorHijo);
 
-    	// Calcular el valor final del impuesto
-    	int imponibleImpuestoGanancias = (valorConcepto92 + valorConcepto85 - valorConcepto192 - valorConcepto185 ) 
-    	                        - gananciaNoImponible 
-    	                        - deduccionEspecial 
-    	                        - deduccionPorEsposa
-    	                        - deduccionPorHijo;
+		EscalaGanancias escala = escalaGananciasRepository.findByDesdeLessThanEqualAndHastaGreaterThanEqualAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
+				(int) imponibleImpuestoGanancias, 
+				(int) imponibleImpuestoGanancias, 
+				mesLiquidacion, 	
+				mesLiquidacion);
 
-    	System.out.println("Base Imponible: " + imponibleImpuestoGanancias); 	
-    	System.out.println("Calculando impuesto para empleado ID: " + empleadoId);
-    	System.out.println("Valores obtenidos para el cálculo:");
-    	System.out.println("Concepto 92: " + valorConcepto92);
-    	System.out.println("Concepto 85: " + valorConcepto85);
-    	System.out.println("Concepto 192: " + valorConcepto192);
-    	System.out.println("Concepto 185: " + valorConcepto185);
-    	System.out.println("Concepto 285: " + valorConcepto285);
-    	System.out.println("Ganancia No Imponible: " + gananciaNoImponible);
-    	System.out.println("Deducción Especial: " + deduccionEspecial);
-    	System.out.println("Deducción por Esposa: " + deduccionPorEsposa);
-    	System.out.println("Deducción por Hijo: " + deduccionPorHijo);
-    	
-    	EscalaGanancias escala = escalaGananciasRepository.findByDesdeLessThanEqualAndHastaGreaterThanEqualAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(
-                (int) imponibleImpuestoGanancias, 
-                (int) imponibleImpuestoGanancias, 
-                mesLiquidacion, 	
-                mesLiquidacion);
-    	
-    	Date fechaActual = new Date(System.currentTimeMillis());
-    	
-        Calendar calendar = Calendar.getInstance();
+		//calendar.set(Calendar.DAY_OF_MONTH, 1);
+		Date fechaInicio = obtenerFechaInicioDelMes();
+
+		if (escala != null) {
+	        // Calcular el impuesto según la escala
+	        int diferencia = imponibleImpuestoGanancias - escala.getDesde();
+	        int impuestoParcial = (diferencia * escala.getPorcentaje()) / 100;
+	        int impuestoTotal = impuestoParcial + escala.getFijo();
+	        int impMes = impuestoTotal - valorConcepto285;
+
+	        logger.info("Impuesto Total para empleado ID {}: {}", empleadoId, impMes);
+
+	        // Guardar el detalle de liquidación para el impuesto calculado
+	        ConceptoSalarial concepto = conceptoSalarialRepository.findById(230)
+	                .orElseThrow(() -> new IllegalArgumentException("Concepto Salarial no encontrado"));
+	        Empleado empleado = empleadoRepository.findById(empleadoId)
+	                .orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado"));
+
+	        crearYGuardarDetalleLiquidacion(empleado, concepto, impMes, fechaActual, fechaInicio);
+	        return impMes;
+     		
+		} else {
+	        logger.warn("No se encontró escala para la base imponible de empleado ID: {}", empleadoId);
+	        return 0;
+	    }
+
+	}
+	
+
+	private Integer obtenerValorConcepto(int empleadoId, int conceptoId) {
+	    Integer valor = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, conceptoId);
+	    return (valor != null) ? valor : 0;
+	}
+	
+	
+	private Integer obtenerValorDeduccion(Date fecha, int conceptoId) {
+	    Integer valor = deduccionImpuestoGananciasRepository.obtenerDeduccion(fecha, conceptoId);
+	    return (valor != null) ? valor : 0;
+	}	
+	
+	
+	private Date obtenerFechaInicioDelMes() {
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date fechaInicio = new Date(calendar.getTimeInMillis());
-    	
-    	if (escala != null) {
-            // Restar el valor de 'desde' y multiplicar por el porcentaje
-    		System.out.println("Imponible Impuesto Ganancias: " + imponibleImpuestoGanancias);
-    		System.out.println("Escala Desde: " + escala.getDesde());
-
-    		int diferencia = imponibleImpuestoGanancias - escala.getDesde();
-
-    		// Mostrar el valor de la diferencia
-    		System.out.println("Diferencia: " + diferencia);
-
-    		int impuestoParcial = diferencia * escala.getPorcentaje() / 100;
-
-    		// Mostrar el valor de impuestoParcial	
-    		System.out.println("Impuesto Parcial: " + impuestoParcial);
-
-    		int impuestoTotal = impuestoParcial + escala.getFijo();
-    		int impMes = impuestoTotal - valorConcepto285;
-
-    		// Mostrar el valor de escala.getFijo() y el resultado de impuestoTotal
-    		System.out.println("Escala Fijo: " + escala.getFijo());
-    		System.out.println("Impuesto Total: " + impuestoTotal);
-            // Sumar el valor fijo al impuesto parcial
-            
-            
-            ConceptoSalarial concepto = conceptoSalarialRepository.findById(230)
-            	    .orElseThrow(() -> new IllegalArgumentException("Concepto Salarial no encontrado"));
-            
-            Empleado empleado = empleadoRepository.findById(empleadoId)
-            	    .orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado"));
-            
-            DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();
-            nuevoDetalle.setEmpleado(empleado);
-            nuevoDetalle.setConceptoSalarial(concepto);
-    		nuevoDetalle.setMonto(impMes);
-            nuevoDetalle.setFechaLiquidacion(fechaActual);
-            nuevoDetalle.setPeriodo(fechaInicio); // Establecer como primer día del mes actual
-            
-	            if (nuevoDetalle.getMonto() != 0){
-	            	detalleLiquidacionRepository.save(nuevoDetalle);
-	            }
-            
-
-
-        } 
-
-    	return imponibleImpuestoGanancias;
+        return new Date(calendar.getTimeInMillis());
     }
-    
-    public int calcularSueldoNeto(int empleadoId, Date mesLiquidacion) {
-        // Obtener valores de conceptos 92 y 192 de detalleLiquidacion por empleado
+	
+	
+	private void crearYGuardarDetalleLiquidacion(Empleado empleado, ConceptoSalarial concepto, int monto, Date fechaLiquidacion, Date periodo) {
+	    DetalleLiquidacion detalle = new DetalleLiquidacion();
+	    detalle.setEmpleado(empleado);
+	    detalle.setConceptoSalarial(concepto);
+	    detalle.setMonto(monto);
+	    detalle.setFechaLiquidacion(fechaLiquidacion);
+	    detalle.setPeriodo(periodo);
 
-    	Integer valorConcepto91 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 91);
-    	valorConcepto91 = (valorConcepto91 != null) ? valorConcepto91 : 0;
+	    if (detalle.getMonto() != 0) {
+	        detalleLiquidacionRepository.save(detalle);
+	    }
+	}
+	
+	
+	int calcularSueldoNeto(int empleadoId, Date mesLiquidacion) {
+		// Obtener valores de conceptos 92 y 192 de detalleLiquidacion por empleado
 
-    	Integer valorConcepto191 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 191);
-    	valorConcepto191 = (valorConcepto191 != null) ? valorConcepto191 : 0;
+		Integer valorConcepto91 = obtenerValorConcepto(empleadoId, 91);
+		Integer valorConcepto191 = obtenerValorConcepto(empleadoId, 191);
+		Integer valorConcepto230 = obtenerValorConcepto(empleadoId, 230);
+		
+	    // Calcular el valor final del impuesto
+		int sueldoNeto = (valorConcepto91 - valorConcepto191 - valorConcepto230) ;   	
+		
+		Date fechaInicio = obtenerFechaInicioDelMes();
 
-    	Integer valorConcepto230 = detalleLiquidacionRepository.obtenerValorConcepto(empleadoId, 230);
-    	valorConcepto230 = (valorConcepto230 != null) ? valorConcepto230 : 0;
+		ConceptoSalarial concepto = conceptoSalarialRepository.findById(491)
+				.orElseThrow(() -> new IllegalArgumentException("Concepto Salarial no encontrado"));
 
-    	  	
+		Empleado empleado = empleadoRepository.findById(empleadoId)
+				.orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado"));
 
-
-    	// Calcular el valor final del impuesto
-    	int sueldoNeto = (valorConcepto91 - valorConcepto191 - valorConcepto230) ;   	
-
-    	Date fechaActual = new Date(System.currentTimeMillis());
-    	
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        Date fechaInicio = new Date(calendar.getTimeInMillis());
-    	
-    	ConceptoSalarial concepto = conceptoSalarialRepository.findById(491)
-        	    .orElseThrow(() -> new IllegalArgumentException("Concepto Salarial no encontrado"));
-        
-        Empleado empleado = empleadoRepository.findById(empleadoId)
-        	    .orElseThrow(() -> new IllegalArgumentException("Empleado no encontrado"));
-    	
-        DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();
-        nuevoDetalle.setEmpleado(empleado);
-        nuevoDetalle.setConceptoSalarial(concepto);
-		nuevoDetalle.setMonto(sueldoNeto);
-        nuevoDetalle.setFechaLiquidacion(fechaActual);
-        nuevoDetalle.setPeriodo(fechaInicio); // Establecer como primer día del mes actual
-        
-        if (nuevoDetalle.getMonto() != 0){
-        	detalleLiquidacionRepository.save(nuevoDetalle);
-        
-        }
-       
+		crearYGuardarDetalleLiquidacion(empleado, concepto, sueldoNeto, fechaActual, fechaInicio);
 
 		return sueldoNeto;
-}}
+	}
+}

@@ -9,5 +9,5 @@ import com.nomina.backend.model.Provincia;
 
 @Repository
 public interface ProvinciaRepository extends JpaRepository<Provincia, Integer> {
-	List<Provincia> findByNombre(String name);
+	List<Provincia> findByNombreIgnoreCase(String nombre);
 }
