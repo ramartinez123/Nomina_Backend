@@ -12,6 +12,7 @@ import com.nomina.backend.Iservice.IbancoService;
 import com.nomina.backend.dto.BancoDTO;
 import com.nomina.backend.model.Banco;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/bancos")
 public class BancoController {

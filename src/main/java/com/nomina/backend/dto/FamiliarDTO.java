@@ -1,50 +1,21 @@
-package com.nomina.backend.model;
+package com.nomina.backend.dto;
 
 import java.util.Date;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "familiares")
-public class Familiar {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class FamiliarDTO {
+
     private int id;
+    private String idParentesco;
+    private Integer idEmpleado;
+    private String apellidoEm;
+    private String apellidoNombre;
+    private Date fechaNacimiento;
+    private Date fechaInicio;
+    private Date fechaFin;
+    private boolean aCargo;
+    private boolean aCargoOSocial;
+    private boolean tieneDiscapacidad;
 
-    @Column(name = "id_parentesco", nullable = false, length = 40)
-    private String idParentesco; 
-    
-    @ManyToOne
-    @JoinColumn(name = "id_empleado") 
-    private Empleado empleado;
-
-    @Column(name = "apellido_nombre", nullable = false, length = 60)
-    private String apellidoNombre; 
-
-    @Column(name = "fecha_nacimiento", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaNacimiento; 
-
-    @Column(name = "fecha_inicio", nullable = false)
-    @Temporal(TemporalType.DATE)
-    private Date fechaInicio; 
-
-    @Column(name = "fecha_fin", nullable = true)
-    @Temporal(TemporalType.DATE)
-    private Date fechaFin; 
-    
-    @Column(name = "a_cargo", nullable = false)
-    private boolean aCargo; 
-    
-    @Column(name = "a_cargo_osocial", nullable = false)
-    private boolean aCargoOSocial; 
-
-    @Column(name = "tiene_discapacidad", nullable = false)
-    private boolean tieneDiscapacidad; 
-    
-    
-    
-    
     // Getters y Setters
     public int getId() {
         return id;
@@ -61,15 +32,6 @@ public class Familiar {
     public void setIdParentesco(String idParentesco) {
         this.idParentesco = idParentesco;
     }
-
-    public Empleado getEmpleado() {
-        return empleado;
-    }
-
-    public void setEmpleado(Empleado empleado) {
-        this.empleado = empleado;
-    }
-
 
     public String getApellidoNombre() {
         return apellidoNombre;
@@ -102,19 +64,16 @@ public class Familiar {
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
-    
- // Getter y Setter para aCargoOSocial
-    public boolean getACargo() {
+
+    public boolean isACargo() {
         return aCargo;
     }
 
     public void setACargo(boolean aCargo) {
         this.aCargo = aCargo;
     }
-    
-    
- // Getter y Setter para aCargoOSocial
-    public boolean getACargoOSocial() {
+
+    public boolean isACargoOSocial() {
         return aCargoOSocial;
     }
 
@@ -122,13 +81,27 @@ public class Familiar {
         this.aCargoOSocial = aCargoOSocial;
     }
 
-    
-
     public boolean isTieneDiscapacidad() {
         return tieneDiscapacidad;
     }
 
     public void setTieneDiscapacidad(boolean tieneDiscapacidad) {
         this.tieneDiscapacidad = tieneDiscapacidad;
-    }	
+    }
+
+	public Integer getIdEmpleado() {
+		return idEmpleado;
+	}
+
+	public void setIdEmpleado(Integer idEmpleado) {
+		this.idEmpleado = idEmpleado;
+	}
+
+	public String getApellidoEm() {
+		return apellidoEm;
+	}
+
+	public void setApellidoEm(String apellidoEm) {
+		this.apellidoEm = apellidoEm;
+	}
 }

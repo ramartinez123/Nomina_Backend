@@ -26,7 +26,6 @@ public interface NovedadLiquidacionRepository extends JpaRepository<NovedadLiqui
             @Param("fechaInicio") Date fechaInicio, 
             @Param("fechaFin") Date fechaFin);
 }*/
-    
 
   
     List<NovedadLiquidacion> findByEmpleadoId(Integer empleadoId);

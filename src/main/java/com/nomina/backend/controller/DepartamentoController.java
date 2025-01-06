@@ -11,6 +11,7 @@ import com.nomina.backend.Iservice.IdepartamentoService;
 import com.nomina.backend.dto.DepartamentoDTO;
 import com.nomina.backend.model.Departamento;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/departamentos")
 public class DepartamentoController {

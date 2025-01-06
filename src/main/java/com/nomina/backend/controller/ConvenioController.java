@@ -11,6 +11,7 @@ import com.nomina.backend.Iservice.IconvenioService;
 import com.nomina.backend.dto.ConvenioDTO;
 import com.nomina.backend.model.Convenio;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/convenios")
 public class ConvenioController {

@@ -13,6 +13,7 @@ import com.nomina.backend.Iservice.IpuestoService;
 import com.nomina.backend.dto.PuestoDTO;
 import com.nomina.backend.model.Puesto;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/puestos")
 public class PuestoController {

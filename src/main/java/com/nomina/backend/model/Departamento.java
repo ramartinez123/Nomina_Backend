@@ -68,4 +68,8 @@ public class Departamento {
     public void listEmpleados(List<Empleado> empleados) {
         this.empleados = empleados;
     }
+
+	public String getNombreDepartamento() {
+		return nombre;
+	}
 }

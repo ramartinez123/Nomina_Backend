@@ -27,6 +27,9 @@ public class LiquidacionTotalesHaberesService {
 
 	@Autowired
 	private ConceptoSalarialRepository conceptoSalarialRepository;
+	
+	@Autowired
+	private LiquidacionRetencionesService liquidacionRetencionesService;
 
 	private enum ConceptoTipo {
 		IMP_APORTES, IMP_GANANCIAS, IMP_INDEMNIZACION, SUELDO_TOTAL, IMP_AGUINALDO
@@ -38,7 +41,7 @@ public class LiquidacionTotalesHaberesService {
 		Date fechaInicio = obtenerFechaInicioDelMes();
 
 		// Obtener todos los detalles de liquidación
-		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findAll();
+		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByPeriodo(fechaInicio);
 
 		// Mapas para acumular montos por empleado por tipo de concepto
 		Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto = inicializarMapasDeSumas();
@@ -57,7 +60,7 @@ public class LiquidacionTotalesHaberesService {
 		// Registrar los totales para cada tipo de concepto usando sus IDs específicos
 		registrarTotales(sumasPorConcepto, fechaActual, fechaInicio);
 		
-		//liquidacionRetencionesService.procesarYRegistrarNuevosDetalles();
+		//	liquidacionRetencionesService.procesarYRegistrarNuevosDetalles();
 	}
 
 	private Date obtenerFechaInicioDelMes() {

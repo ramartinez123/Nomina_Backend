@@ -3,8 +3,13 @@ package com.nomina.backend.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "categorias_convenio")
+@JsonIgnoreProperties({	"descripcion", "empleados","convenio"})
 public class Categoria {
 
     @Id
@@ -23,10 +28,13 @@ public class Categoria {
     private String descripcion; 
 
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Empleado> empleados;
+    //@JsonBackReference
     
-    @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<HistoricoValoresCategoria> historicoValores; 
+    @JsonIgnore*/
     
  // Constructor vacío
     public Categoria() {
@@ -38,7 +46,7 @@ public class Categoria {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.empleados = empleados;
-        this.historicoValores = historicoValores;
+        //this.historicoValores = historicoValores;
     }
     
 

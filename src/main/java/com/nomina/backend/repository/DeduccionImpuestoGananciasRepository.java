@@ -11,6 +11,6 @@ import com.nomina.backend.model.DeduccionImpuestoGanancias;
 @Repository
 public interface DeduccionImpuestoGananciasRepository extends JpaRepository<DeduccionImpuestoGanancias, Integer> {
 
-	@Query("SELECT d.valor FROM DeduccionImpuestoGanancias d WHERE :fecha BETWEEN d.fechaInicio AND d.fechaFin AND d.idTipoDeduccion = :tipoDeduccion")
-    Integer obtenerDeduccion(@Param("fecha") Date fecha, @Param("tipoDeduccion") Integer tipoDeduccion);
-}
+	@Query("SELECT d.valor FROM DeduccionImpuestoGanancias d WHERE :fecha BETWEEN date(d.fechaInicio) AND date(d.fechaFin) AND d.idTipoDeduccion = :tipoDeduccion")
+	Integer obtenerDeduccion(@Param("fecha") Date fecha, @Param("tipoDeduccion") Integer tipoDeduccion);
+}	

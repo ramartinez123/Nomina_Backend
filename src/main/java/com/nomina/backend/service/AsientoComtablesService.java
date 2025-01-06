@@ -1,4 +1,3 @@
-
 package com.nomina.backend.service;
 
 import com.nomina.backend.model.ConceptoSalarial;
@@ -11,9 +10,12 @@ import com.nomina.backend.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
+import java.time.Month;
 
 @Service
 public class AsientoComtablesService {
@@ -24,45 +26,70 @@ public class AsientoComtablesService {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
+    public List<Map<String, Object>> generarJsonConDH(int mes, int anio) {
+        List<Empleado> empleados = empleadoRepository.findAll();
+        Map<String, Integer> sumaPorCuentaContable = new HashMap<>();
 
-    private final CuentaContable cuentaAdicional2 = CuentaContable.RETENCIONES; // Enum constante
+        // Crear la fecha de inicio y fin del mes usando LocalDate
+        LocalDate fechaInicio = LocalDate.of(anio, mes, 1);  // Primer día del mes
+        LocalDate fechaFin = fechaInicio.withDayOfMonth(fechaInicio.lengthOfMonth());  // Último día del mes
 
-
-    public Map<CuentaContable, Integer> sumarConceptosPorCuentaContable() {
-        List<Empleado> empleados = empleadoRepository.findAll(); // Obtener todos los empleados
-        Map<CuentaContable, Integer> sumaPorCuentaContable = new HashMap<>();
-        
-        int totalMontoParaCuentaAdicional2 = 0;
-
+        // Sumar los montos por cuenta contable, filtrando por mes y año
         for (Empleado empleado : empleados) {
-            List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByEmpleadoId(empleado.getId());
+            // Consultar los detalles de liquidación filtrados por el rango de fechas
+            List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByEmpleadoIdAndFechaLiquidacionBetween(
+                    empleado.getId(), fechaInicio, fechaFin);
 
             for (DetalleLiquidacion detalle : detalles) {
                 ConceptoSalarial concepto = detalle.getConceptoSalarial();
-                int monto = detalle.getMonto();
-                CuentaContable cuentaContable = concepto.getCuentaContable();
+                String cuentaContable = concepto.getCuentaContable().toString();
 
-                // Asignar monto a la cuenta correspondiente
-                if (cuentaContable != null) {
-                    sumaPorCuentaContable.put(cuentaContable,
-                        sumaPorCuentaContable.getOrDefault(cuentaContable, 0) + monto);
-                } else {
-                    System.out.println("Cuenta contable nula para concepto: " + concepto);
+                // Excluir las cuentas contables con el valor "NO"
+                if ("NO".equals(cuentaContable)) {
+                    continue;
                 }
 
-         
-                if (concepto.getId() == 1001 || concepto.getId() == 1002 || concepto.getId() == 1003 || concepto.getId() == 1004|| concepto.getId() == 1005) {
-                    totalMontoParaCuentaAdicional2 += monto;
-                                }
+                int monto = detalle.getMonto();
+                sumaPorCuentaContable.put(cuentaContable,
+                    sumaPorCuentaContable.getOrDefault(cuentaContable, 0) + monto);
             }
         }
 
-        // Asignar los montos acumulados a las cuentas adicionales
-        sumaPorCuentaContable.put(cuentaAdicional2, 
-                sumaPorCuentaContable.getOrDefault(cuentaAdicional2, 0) + totalMontoParaCuentaAdicional2);
+        // Convertir los datos a la lista con el nuevo campo
+        List<Map<String, Object>> resultado = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : sumaPorCuentaContable.entrySet()) {
+            String cuenta = entry.getKey();
+            int monto = entry.getValue();
 
+            // Si es la cuenta "APORTES", duplicarla con tipo D y H
+            if ("APORTES".equals(cuenta)) {
+                // Agregar con tipo D
+                Map<String, Object> cuentaJsonD = new HashMap<>();
+                cuentaJsonD.put("tipo", "D");
+                cuentaJsonD.put("monto", monto);
+                cuentaJsonD.put("cuentaContable", cuenta);
+                resultado.add(cuentaJsonD);
 
-        return sumaPorCuentaContable;
-    }
-}
+                // Agregar con tipo H
+                Map<String, Object> cuentaJsonH = new HashMap<>();
+                cuentaJsonH.put("tipo", "H");
+                cuentaJsonH.put("monto", monto);
+                cuentaJsonH.put("cuentaContable", cuenta);
+                resultado.add(cuentaJsonH);
+            } else {
+                // Para las demás cuentas, determinar el valor del nuevo campo (D o H)
+                String nuevoCampo = ("SUELDOS".equals(cuenta) || 
+                                     "LICENCIAS".equals(cuenta)) ? "D" : "H";
 
+                // Crear el objeto para el JSON
+                Map<String, Object> cuentaJson = new HashMap<>();
+                cuentaJson.put("tipo", nuevoCampo);
+                cuentaJson.put("monto", monto);
+                cuentaJson.put("cuentaContable", cuenta);
+
+                resultado.add(cuentaJson);
+            }
+        }
+
+        return resultado;
+    }}

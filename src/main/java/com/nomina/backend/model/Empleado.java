@@ -2,7 +2,12 @@ package com.nomina.backend.model;
 
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -52,6 +57,7 @@ public class Empleado {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_categoria")
+    @JsonManagedReference
     private Categoria categoria;
 
     @ManyToOne
@@ -116,7 +122,7 @@ public class Empleado {
     private List<SalarioExcedente> salarioExcedente;
     
     @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-    @JsonIgnore
+    @JsonBackReference
     private List<NovedadLiquidacion> novedadLiquidaciones;
     
     @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -214,7 +220,7 @@ public class Empleado {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(java.sql.Date fechaNacimiento) {
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -294,7 +300,7 @@ public class Empleado {
         return fechaInicio;
     }
 
-    public void setFechaInicio(java.sql.Date fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
@@ -302,7 +308,7 @@ public class Empleado {
         return fechaFin;
     }
 
-    public void setFechaFin(java.sql.Date fechaFin) {
+    public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
 

@@ -12,6 +12,7 @@ import com.nomina.backend.dto.CategoriaDTO;
 import com.nomina.backend.model.Categoria;
 import com.nomina.backend.model.Convenio;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {

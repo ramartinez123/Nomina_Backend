@@ -1,10 +1,9 @@
-package com.nomina.backend.controller;
+	package com.nomina.backend.controller;
 
-import com.nomina.backend.model.CuentaContable;
+
 import com.nomina.backend.service.AnulaBajaEmpleadoService;
 import com.nomina.backend.service.AsientoComtablesService;
 import com.nomina.backend.service.BajaEmpleadoService;
-import com.nomina.backend.service.LiquidacionCargasSocialesService;
 import com.nomina.backend.service.LiquidacionImpuestoGananciasService;
 import com.nomina.backend.service.LiquidacionNovedadesService;
 import com.nomina.backend.service.LiquidacionRetencionesService;
@@ -15,13 +14,12 @@ import com.nomina.backend.service.LiquidacionSueldoIdService;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.sql.Date;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/liquidacion") 
 public class LiquidacionController {
@@ -50,11 +48,6 @@ public class LiquidacionController {
     @Autowired
     private AnulaBajaEmpleadoService anulaBajaEmpleado;
     
-    @Autowired
-    private LiquidacionCargasSocialesService liquidacionCargasSocialesService;
-    
-    @Autowired
-    private AsientoComtablesService asientoComtablesService;
 
     @PostMapping("/realizar") 
     public ResponseEntity<String> realizarLiquidacion() {
@@ -117,7 +110,7 @@ public class LiquidacionController {
         }
     }
     
-    @PostMapping("/cargasSociales") 
+   /* @PostMapping("/cargasSociales") 
     public ResponseEntity<String> procesarCargasSociales() {
         try {
             liquidacionCargasSocialesService.procesarCargasSociales(); 
@@ -125,7 +118,7 @@ public class LiquidacionController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
         }
-    }
+    }*/
     
     @PutMapping("/darDeBaja/{id}")
     public ResponseEntity<String> darDeBajaEmpleado(
@@ -158,10 +151,10 @@ public class LiquidacionController {
         }
     }
     
-    @GetMapping("/sumaPorCuenta")
+   /* @GetMapping("/sumaPorCuenta")
     public ResponseEntity<Map<CuentaContable, Integer>> obtenerSumaPorCuentaContable() {
         Map<CuentaContable, Integer> sumaPorCuentaContable = asientoComtablesService.sumarConceptosPorCuentaContable();
         return ResponseEntity.ok(sumaPorCuentaContable);
-    }
+    }*/
 }
 

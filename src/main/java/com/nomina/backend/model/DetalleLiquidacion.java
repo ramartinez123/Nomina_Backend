@@ -104,9 +104,4 @@ public class DetalleLiquidacion {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-
-
-
 }

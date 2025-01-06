@@ -46,6 +46,8 @@ public class LiquidacionSueldoService {
 		Date fechaLiquidacion = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		Date periodo = Date.from(now.withDayOfMonth(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
+		eliminarRegistrosPreviosDelPeriodo(periodo);
+		
 		for (Empleado empleado : empleados) {
 	        logger.info("Procesando liquidación para el empleado con ID: {}", empleado.getId());
 
@@ -79,9 +81,33 @@ public class LiquidacionSueldoService {
 
 		logger.info("Finalizada la liquidación para todos los empleados.");
 	}
+	
+	private void eliminarRegistrosPreviosDelPeriodo(Date periodo) {
+	    if (periodo == null) {
+	        logger.error("El periodo proporcionado es nulo. No se puede continuar con la eliminación.");
+	        throw new IllegalArgumentException("El periodo no puede ser nulo.");
+	    }
+
+	    // Convertir java.util.Date a java.sql.Date
+	    java.sql.Date sqlPeriodo = new java.sql.Date(periodo.getTime());
+
+	    try {
+	        List<DetalleLiquidacion> registrosPrevios = detalleLiquidacionRepository.findByPeriodo(sqlPeriodo);
+	        if (!registrosPrevios.isEmpty()) {
+	            logger.info("Se encontraron {} registros previos para el periodo {}. Procediendo a eliminarlos.",
+	                    registrosPrevios.size(), sqlPeriodo);
+	            detalleLiquidacionRepository.deleteAll(registrosPrevios);
+	            logger.info("Registros previos eliminados exitosamente.");
+	        } else {
+	            logger.info("No se encontraron registros previos para el periodo {}.", sqlPeriodo);
+	        }
+	    } catch (Exception e) {
+	        logger.error("Error al intentar eliminar los registros previos para el periodo {}: {}", sqlPeriodo, e.getMessage());
+	        throw e; // Relanzar la excepción si es necesario.
+	    }
+	}
 
 	private void procesarLiquidacionEmpleado(Empleado empleado, Date fechaLiquidacion, Date periodo) {
-
 
 		// Obtener valores de historicoValoresCategoria
 		Integer idCategoria = empleado.getCategoria().getIdCategoria();

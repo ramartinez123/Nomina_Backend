@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "concepto_salarial")
@@ -16,47 +17,47 @@ public class ConceptoSalarial {
     @Column(name = "nombre", nullable = false, length = 60)
     private String nombre; 
 
-    @Column(name = "descripcion", nullable = false, length = 60)
+    @Column(name = "descripcion", nullable = true, length = 60)
     private String descripcion; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false)
     private TipoConcepto tipo; 
 
-    @Column(name = "imp_aportes", nullable = false)
+    @Column(name = "imp_aportes", nullable = true)
     private Boolean impAportes; 
 
-    @Column(name = "imp_ganancias", nullable = false)
+    @Column(name = "imp_ganancias", nullable = true)
     private Boolean impGanancias;
     
-    @Column(name = "imp_indemnizacion", nullable = false)
+    @Column(name = "imp_indemnizacion", nullable = true)
     private Boolean impIndemnizacion; 
 
-    @Column(name = "imp_sac", nullable = false)
+    @Column(name = "imp_sac", nullable = true)
     private Boolean impSac; 
 
-    @Column(name = "sueldo_total", nullable = false)
+    @Column(name = "sueldo_total", nullable = true)
     private Boolean sueldoTotal; 
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_valor", nullable = false)
+    @Column(name = "tipo_valor", nullable = true)
     private TipoValor tipoValor; 
 
-    @Column(name = "valor")
+    @Column(name = "valor", nullable = true)
     private Integer valor; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "cuenta_contable",nullable = true)
     private CuentaContable cuentaContable; 
     
-    @Column(name = "formula", length = 60)
+    @Column(name = "formula", length = 60, nullable = true)
     private String formula; 
 
-    @Column(name = "fecha_inicio", nullable = false)
+    @Column(name = "fecha_inicio", nullable = true)
     @Temporal(TemporalType.DATE)
     private Date fechaInicio; 
 
-    @Column(name = "fecha_fin")
+    @Column(name = "fecha_fin",nullable = true)
     @Temporal(TemporalType.DATE)
     private Date fechaFin; 
     
@@ -65,7 +66,7 @@ public class ConceptoSalarial {
     private List<DetalleLiquidacion> detalleLiquidaciones;
     
     @OneToMany(mappedBy = "conceptoSalarial", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-    @JsonIgnore
+    @JsonManagedReference
     private List<SalarioExcedente> salarioExcedente;
     
     @OneToMany(mappedBy = "conceptoSalarial", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

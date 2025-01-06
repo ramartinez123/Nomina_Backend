@@ -1,5 +1,7 @@
 package com.nomina.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import java.util.Date;
 
@@ -12,15 +14,17 @@ public class HistoricoValoresCategoria {
     @Column(name = "id")
     private Integer id; 
     
-    @ManyToOne // Relación con Categoria
+    @ManyToOne	
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria; 
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fechaInicio; 
 
-    @Column(name = "fecha_baja")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "fecha_baja",nullable = true		)
     @Temporal(TemporalType.DATE)
     private Date fechaBaja; 
 
@@ -30,7 +34,7 @@ public class HistoricoValoresCategoria {
     @Column(name = "almuerzo", nullable = false)
     private Integer almuerzo; 
 
- // Constructor vacío
+    // Constructor vacío
     public HistoricoValoresCategoria() {
     }
 
@@ -43,9 +47,7 @@ public class HistoricoValoresCategoria {
         this.almuerzo = almuerzo;
     }
 
-
     // Getters y Setters
-
     public Integer getId() {
         return id;
     }
@@ -62,6 +64,13 @@ public class HistoricoValoresCategoria {
         this.categoria = categoria;
     }
 
+    // Exponer solo el ID de la categoría en la respuesta JSON
+    @JsonProperty("idCategoria")
+    public Integer getCategoriaId() {
+        return categoria != null ? categoria.getIdCategoria() : null;
+    }
+
+    // Métodos para obtener/establecer otros campos
     public Date getFechaInicio() {
         return fechaInicio;
     }

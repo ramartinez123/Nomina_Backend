@@ -3,6 +3,8 @@ package com.nomina.backend.model;
 import jakarta.persistence.*;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "salario_excedente")
 public class SalarioExcedente {
@@ -18,6 +20,7 @@ public class SalarioExcedente {
 
     @ManyToOne
     @JoinColumn(name = "id_concepto", nullable = false)
+    @JsonManagedReference
     private ConceptoSalarial conceptoSalarial;
 
     @Column(name = "valor", nullable = false)

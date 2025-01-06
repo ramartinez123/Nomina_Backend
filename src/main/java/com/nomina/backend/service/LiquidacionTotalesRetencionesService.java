@@ -45,7 +45,7 @@ public class LiquidacionTotalesRetencionesService {
 
 
 		// Obtener todos los detalles de liquidación
-		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findAll();
+		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByPeriodo(fechaInicio);
 		logger.info("Total de Detalles de Liquidación: {}", detalles.size());
 
 		// Filtrar los detalles para los conceptos del 1 al 89
@@ -80,7 +80,8 @@ public class LiquidacionTotalesRetencionesService {
 		registrarTotalesPorConcepto(sumaImpAportesPorEmpleado, fechaActual, fechaInicio, 191); // true para ImpAportes
 		registrarTotalesPorConcepto(sumaImpGananciasPorEmpleado, fechaActual, fechaInicio, 192); // false para
 
-		liquidacionImpuestoGananciasService.calcularImpuestoGananciasTodos(fechaActual);
+		liquidacionImpuestoGananciasService.calcularImpuestoGananciasTodos(fechaInicio);
+			
 	}
 	
 	private Date obtenerFechaInicioDelMes() {
@@ -88,31 +89,36 @@ public class LiquidacionTotalesRetencionesService {
         return new Date(calendar.getTimeInMillis());
     }
 
-	private void registrarTotalesPorConcepto(Map<Integer, Integer> sumaPorEmpleado, Date fechaActual, Date fechaInicio,
-			int conceptoId) {
-		for (Map.Entry<Integer, Integer> entry : sumaPorEmpleado.entrySet()) {
-			Integer empleadoId = entry.getKey();
-			Integer sumaTotal = entry.getValue();
+	private void registrarTotalesPorConcepto(Map<Integer, Integer> sumaPorEmpleado, Date fechaActual, Date fechaInicio, int conceptoId) {
+	    for (Map.Entry<Integer, Integer> entry : sumaPorEmpleado.entrySet()) {
+	        Integer empleadoId = entry.getKey();
+	        Integer sumaTotal = entry.getValue();
 
-			// Busca el empleado existente en lugar de crear uno nuevo
-			Empleado empleado = empleadoRepository.findById(empleadoId)
-					.orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+	        // Busca el empleado existente en lugar de crear uno nuevo
+	        Empleado empleado = empleadoRepository.findById(empleadoId)
+	                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-			// Crea un concepto salarial dependiendo de si es Aporte o Ganancias
-			ConceptoSalarial concepto = conceptoSalarialRepository.findById(conceptoId)
-					.orElseThrow(() -> new RuntimeException("ConceptoSalarial no encontrado"));
+	        // Crea un concepto salarial dependiendo de si es Aporte o Ganancias
+	        ConceptoSalarial concepto = conceptoSalarialRepository.findById(conceptoId)
+	                .orElseThrow(() -> new RuntimeException("ConceptoSalarial no encontrado"));
 
-			// Crear y guardar el nuevo registro de DetalleLiquidacion
-			DetalleLiquidacion nuevoRegistro = new DetalleLiquidacion();
-			nuevoRegistro.setEmpleado(empleado); // Usa el empleado existente
-			nuevoRegistro.setMonto(sumaTotal);
-			nuevoRegistro.setConceptoSalarial(concepto); // Usa el concepto existente
-			nuevoRegistro.setPeriodo(fechaInicio);
-			nuevoRegistro.setFechaLiquidacion(fechaActual);
+	        // Verificar si ya existe un registro con el mismo empleado, concepto y periodo
+	        boolean existeRegistro = detalleLiquidacionRepository.existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(empleadoId, conceptoId, fechaInicio);
+	        
+	        if (existeRegistro) {
+	            logger.warn("Ya existe un registro para empleado ID {}: concepto ID {}, periodo {}", empleadoId, conceptoId, fechaInicio);
+	        } else {
+	            // Crear y guardar el nuevo registro de DetalleLiquidacion
+	            DetalleLiquidacion nuevoRegistro = new DetalleLiquidacion();
+	            nuevoRegistro.setEmpleado(empleado); // Usa el empleado existente
+	            nuevoRegistro.setMonto(sumaTotal);
+	            nuevoRegistro.setConceptoSalarial(concepto); // Usa el concepto existente
+	            nuevoRegistro.setPeriodo(fechaInicio);
+	            nuevoRegistro.setFechaLiquidacion(fechaActual);
 
-			// Guardar el registro en la base de datos
-			detalleLiquidacionRepository.save(nuevoRegistro);
-			logger.info("Registro guardado para empleado ID {}: monto {}, concepto ID {}", empleadoId, sumaTotal, conceptoId);
-		}
-	}
-}
+	            // Guardar el registro en la base de datos
+	            detalleLiquidacionRepository.save(nuevoRegistro);
+	            logger.info("Registro guardado para empleado ID {}: monto {}, concepto ID {}", empleadoId, sumaTotal, conceptoId);
+	        }
+	    }
+	}}

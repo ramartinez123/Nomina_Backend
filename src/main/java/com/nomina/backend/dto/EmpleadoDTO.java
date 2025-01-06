@@ -1,6 +1,8 @@
 package com.nomina.backend.dto;
 
-import java.sql.Date;
+
+
+import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -15,12 +17,22 @@ public class EmpleadoDTO {
 	
 	@JsonView(EmpleadoViews.Basica.class)
     private String apellido;
+	
+    @JsonView(EmpleadoViews.Basica.class)
     private String dni;
     private Date fechaNacimiento;
+    
+    @JsonView(EmpleadoViews.Basica.class)
     private String email;
     private String telefono;
+    
+    @JsonView(EmpleadoViews.Basica.class)
     private String direccion;
+    
+    @JsonView(EmpleadoViews.Basica.class)
     private String ciudad;
+    
+    @JsonView(EmpleadoViews.Basica.class)
     private Integer idProvincia; // Solo el ID, si es necesario
     
     @JsonView(EmpleadoViews.Basica.class)
@@ -30,6 +42,8 @@ public class EmpleadoDTO {
     
     @JsonView(EmpleadoViews.Basica.class)
     private Integer idPuesto; // Solo el ID, si es necesario
+    
+    @JsonView(EmpleadoViews.Basica.class)
     private Date fechaInicio;
     private Date fechaFin;
     private Integer diasVacacionesPactadas;
@@ -45,6 +59,9 @@ public class EmpleadoDTO {
     
     @JsonView(EmpleadoViews.Basica.class)
     private String cuil;
+
+    @JsonView(EmpleadoViews.Basica.class)
+	private String departamento;
     
  // Constructor vacío
     public EmpleadoDTO() {}
@@ -85,17 +102,35 @@ public class EmpleadoDTO {
         this.cuil = cuil;
     }
     
-    public EmpleadoDTO(Integer id, String nombre, String apellido, Integer idDepartamento,  Integer idPuesto,String cuil) {
-        this.id= id;
+    public EmpleadoDTO(Integer id, String nombre, String apellido, Integer idDepartamento, Integer idPuesto, String cuil) {
+        this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.idDepartamento = idDepartamento;
         this.idPuesto = idPuesto;
-        this.cuil =cuil;
+        this.cuil = cuil;
     }
     // Getters y Setters
 
-    public Integer getId() {
+    public EmpleadoDTO(Integer id, String nombre, String apellido,String direccion,String ciudad,Integer idProvincia,String dni,String email, Date date, String departamento, Integer idPuesto, String cuil) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.direccion = direccion;
+        this.ciudad = ciudad;
+        this.idProvincia = idProvincia;
+        this.dni = dni;
+        this.email = email;
+        this.fechaInicio = date;
+        this.departamento = departamento;
+        this.idPuesto = idPuesto;
+        this.cuil = cuil;
+    }
+    
+    
+    
+
+	public Integer getId() {
         return id;
     }
 

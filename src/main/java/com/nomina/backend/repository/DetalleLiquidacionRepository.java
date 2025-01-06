@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.nomina.backend.dto.DetalleLiquidacionDTO;
+import com.nomina.backend.dto.LiquidacionDetalleDTO;
 import com.nomina.backend.model.DetalleLiquidacion;
 
 
@@ -28,6 +30,32 @@ public interface DetalleLiquidacionRepository extends JpaRepository<DetalleLiqui
 
 	boolean existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, int conceptoId, Date fechaInicio);
 
+    List<DetalleLiquidacion> findByPeriodo(Date periodo);
+	
 	Optional<DetalleLiquidacion> findByEmpleado_IdAndConceptoSalarial_IdAndFechaLiquidacion(Integer id,
 			Integer conceptoSalarialId, java.util.Date fechaLiquidacion);
+
+	List<DetalleLiquidacion> findByPeriodoBetween(java.util.Date fechaInicio, java.util.Date fechaFin);
+	
+	@Query("SELECT new com.nomina.backend.dto.LiquidacionDetalleDTO(e.id, e.apellido, e.nombre, dl.monto) " +
+		       "FROM DetalleLiquidacion dl " +
+		       "JOIN dl.empleado e " +
+		       "WHERE dl.conceptoSalarial.id = 491 AND FUNCTION('MONTH', dl.periodo) = :mes " +
+		       "AND FUNCTION('YEAR', dl.periodo) = :anio")
+		List<LiquidacionDetalleDTO> findByConcepto491AndMesAndAnio(@Param("mes") int mes, @Param("anio") int anio);
+
+	List<DetalleLiquidacion> findByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, Integer conceptoId,
+			java.util.Date periodo);
+	
+	@Query("SELECT new com.nomina.backend.dto.DetalleLiquidacionDTO(e.id, e.apellido, e.nombre, " +
+		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1001 THEN dl.monto ELSE 0 END), " +
+		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1002 THEN dl.monto ELSE 0 END), " +
+		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1003 THEN dl.monto ELSE 0 END), " +
+		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1004 THEN dl.monto ELSE 0 END), " +
+		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1005 THEN dl.monto ELSE 0 END)) " +
+		       "FROM DetalleLiquidacion dl " +
+		       "JOIN dl.empleado e " +
+		       "GROUP BY e.id, e.apellido, e.nombre")
+		List<DetalleLiquidacionDTO> obtenerLiquidaciones();
+	
 }

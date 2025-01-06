@@ -33,6 +33,7 @@ import com.nomina.backend.model.TipoCuentaBancaria;
 import com.nomina.backend.model.Departamento;
 import com.nomina.backend.model.Categoria;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/empleados")
 public class EmpleadoController {
@@ -81,8 +82,14 @@ public class EmpleadoController {
 							empleado.getId(),
 							empleado.getNombre(),
 							empleado.getApellido(),
-							empleado.getDepartamento() != null ? empleado.getDepartamento().getIdDepartamento() : null,
-									empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,
+							empleado.getDireccion(),
+							empleado.getCiudad(),
+							empleado.getProvincia() != null ? empleado.getProvincia().getIdProvincia() : null,
+							empleado.getDni(),
+							empleado.getEmail(),
+							empleado.getFechaInicio(),
+							empleado.getDepartamento() != null ? empleado.getDepartamento().getNombre() : null,
+							empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,
 											empleado.getCuil()))
 					.collect(Collectors.toList());
 			return new ResponseEntity<>(empleadoDTOs, HttpStatus.OK);

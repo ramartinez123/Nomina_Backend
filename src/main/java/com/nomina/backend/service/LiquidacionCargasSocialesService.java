@@ -21,7 +21,7 @@ public class LiquidacionCargasSocialesService {
     @Autowired
     private ConceptoSalarialRepository conceptoSalarialRepository;
 
-    public void procesarCargasSociales() {
+    public void procesarCargasSociales(int mes, int anio) {
         Date fechaActual = new Date(System.currentTimeMillis());
 
         // Obtener la fecha de inicio del mes
@@ -44,12 +44,25 @@ public class LiquidacionCargasSocialesService {
         };
 
         for (DetalleLiquidacion detalle : detalles) {
-            // Filtrar por fecha de liquidación y empleado
-            if (((Date) detalle.getFechaLiquidacion()).toLocalDate().isEqual(fechaActual.toLocalDate()) && detalle.getEmpleado() != null) {
+            // Verificar si la fecha de liquidación coincide
+
+           // if (((Date) detalle.getFechaLiquidacion()).toLocalDate().isEqual(fechaActual.toLocalDate()) && detalle.getEmpleado() != null) {
+                System.out.println("Procesando detalle para empleado: " + detalle.getEmpleado().getId());
+
                 for (ConceptoSalarial concepto : conceptos) {
+                    // Verifica los valores de monto y concepto
+                    System.out.println("Monto: " + detalle.getMonto() + ", Valor concepto: " + concepto.getValor());
+
                     int montoFinal = calcularMonto(detalle.getMonto(), concepto.getValor());
-                    guardarNuevoDetalle(detalle.getEmpleado(), montoFinal, concepto, fechaInicio, fechaActual);
-                }
+
+                    System.out.println("Monto final calculado: " + montoFinal);
+
+                    if (montoFinal > 0) {
+                        guardarNuevoDetalle(detalle.getEmpleado(), montoFinal, concepto, fechaInicio, fechaActual);
+                    } else {
+                        System.out.println("Monto calculado no válido: " + montoFinal);
+                    }
+                
             }
         }
     }
@@ -67,6 +80,7 @@ public class LiquidacionCargasSocialesService {
         nuevoDetalle.setConceptoSalarial(concepto);
         nuevoDetalle.setPeriodo(periodo);
         nuevoDetalle.setFechaLiquidacion(fechaLiquidacion);
+        System.out.println("Guardando nuevo detalle: " + nuevoDetalle);
         detalleLiquidacionRepository.save(nuevoDetalle);
     }
 }

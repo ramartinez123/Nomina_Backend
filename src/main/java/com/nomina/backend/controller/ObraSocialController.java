@@ -1,6 +1,7 @@
 package com.nomina.backend.controller;
 
 import java.util.List;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import com.nomina.backend.Iservice.IobraSocialService;
 import com.nomina.backend.dto.ObraSocialDTO;
 import com.nomina.backend.model.ObraSocial;
 
+@CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/obras-sociales")
 public class ObraSocialController {
