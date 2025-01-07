@@ -3,12 +3,18 @@ package com.nomina.backend.Iservice;
 import java.util.List;
 import java.util.Optional;
 
+import com.nomina.backend.dto.PuestoDTO;
 import com.nomina.backend.model.Puesto;
 
 public interface IpuestoService {
 	public List<Puesto>listPuesto();
-	public Optional<Puesto> findById(Integer id);
-	public int savePuesto(Puesto puesto);
-	public boolean deletePuesto(int id);
-	public List<Puesto> findByNombre(String name);
+
+	List<PuestoDTO> listPuestos();
+
+	Optional<PuestoDTO> getPuestoById(int id);
+
+	PuestoDTO createPuesto(PuestoDTO puestoDTO);
+
+	PuestoDTO updatePuesto(int id, PuestoDTO puestoDTO);
+
 }

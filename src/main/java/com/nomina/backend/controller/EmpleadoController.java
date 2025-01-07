@@ -69,59 +69,67 @@ public class EmpleadoController {
 	@GetMapping
 	@JsonView(EmpleadoViews.Basica.class)
 	public ResponseEntity<?> getAllEmpleados() {
-		try {
-			List<Empleado> empleados = empleadoService.listEmpleado();
+	    try {
+	        List<Empleado> empleados = empleadoService.listEmpleado();
 
-			// Verificar si la lista de empleados está vacía
-			if (empleados.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // No hay contenido
-			}
+	        if (empleados.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // No hay empleados
+	        }
 
-			List<EmpleadoDTO> empleadoDTOs = empleados.stream()
-					.map(empleado -> new EmpleadoDTO(
-							empleado.getId(),
-							empleado.getNombre(),
-							empleado.getApellido(),
-							empleado.getDireccion(),
-							empleado.getCiudad(),
-							empleado.getProvincia() != null ? empleado.getProvincia().getIdProvincia() : null,
-							empleado.getDni(),
-							empleado.getEmail(),
-							empleado.getFechaInicio(),
-							empleado.getDepartamento() != null ? empleado.getDepartamento().getNombre() : null,
-							empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,
-											empleado.getCuil()))
-					.collect(Collectors.toList());
-			return new ResponseEntity<>(empleadoDTOs, HttpStatus.OK);
-		} catch (Exception e) {
-			return handleException(e);
-		}
+	        List<EmpleadoDTO> empleadoDTOs = empleados.stream()
+	                .map(this::convertToEmpleadoDTO) // Uso de un método auxiliar para convertir
+	                .collect(Collectors.toList());
+
+	        return new ResponseEntity<>(empleadoDTOs, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return handleException(e); // Manejo centralizado de excepciones
+	    }
 	}
 
+	private EmpleadoDTO convertToEmpleadoDTO(Empleado empleado) {
+	    return new EmpleadoDTO(
+	            empleado.getId(),
+	            empleado.getNombre(),
+	            empleado.getApellido(),
+	            empleado.getDireccion(),
+	            empleado.getCiudad(),
+	            empleado.getProvincia() != null ? empleado.getProvincia().getIdProvincia() : null,
+	            empleado.getDni(),
+	            empleado.getEmail(),
+	            empleado.getFechaInicio(),
+	            empleado.getDepartamento() != null ? empleado.getDepartamento().getNombre() : null,
+	            empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,
+	            empleado.getCuil()
+	    );
+	}
 	// Obtener un empleado por ID
 	@GetMapping("/{id}")
 	@JsonView(EmpleadoViews.Basica.class)
 	public ResponseEntity<?> getEmpleadoById(@PathVariable int id) {
-		try {
-			Optional<Empleado> empleadoOpt = empleadoService.findById(id);
+	    try {
+	        Optional<Empleado> empleadoOpt = empleadoService.findById(id);
 
-			if (empleadoOpt.isPresent()) {
-				Empleado empleado = empleadoOpt.get();
-				EmpleadoDTO empleadoDTO = new EmpleadoDTO(
-						empleado.getId(),
-						empleado.getNombre(),
-						empleado.getApellido(),
-						empleado.getDepartamento() != null ? empleado.getDepartamento().getIdDepartamento() : null,
-								empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,		
-										empleado.getCuil()
-						);
-				return ResponseEntity.ok(empleadoDTO);
-			} else {
-				return ResponseEntity.notFound().build();
-			}
-		} catch (Exception e) {
-			return handleException(e);
-		}
+	        if (empleadoOpt.isPresent()) {
+	            Empleado empleado = empleadoOpt.get();
+	            EmpleadoDTO empleadoDTO = convertToEmpleadoDTO2(empleado);
+	            return ResponseEntity.ok(empleadoDTO);
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    } catch (Exception e) {
+	        return handleException(e); // Manejo centralizado de excepciones
+	    }
+	}
+
+	private EmpleadoDTO convertToEmpleadoDTO2(Empleado empleado) {
+	    return new EmpleadoDTO(
+	            empleado.getId(),
+	            empleado.getNombre(),
+	            empleado.getApellido(),
+	            empleado.getDepartamento() != null ? empleado.getDepartamento().getIdDepartamento() : null,
+	            empleado.getPuesto() != null ? empleado.getPuesto().getIdPuesto() : null,
+	            empleado.getCuil()
+	    );
 	}
 
 	@PostMapping

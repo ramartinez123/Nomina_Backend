@@ -4,6 +4,9 @@ import com.nomina.backend.dto.ConceptoSalarialDTO;
 import com.nomina.backend.dto.ConceptoSalarialDTO2;
 import com.nomina.backend.model.ConceptoSalarial;
 import com.nomina.backend.repository.ConceptoSalarialRepository;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +32,9 @@ public class ConceptoSalarialService {
         )).collect(Collectors.toList());
     }
 
+
     // Método para crear un nuevo concepto salarial (con DTO completo - DTO)
+    @Transactional
     public ConceptoSalarial crearConcepto(ConceptoSalarialDTO conceptoSalarialDTO) {
         ConceptoSalarial concepto = new ConceptoSalarial(
                 conceptoSalarialDTO.getNombre(),
@@ -54,6 +59,7 @@ public class ConceptoSalarialService {
     }
 
     // Método para actualizar un concepto salarial existente (con DTO completo - DTO)
+    @Transactional
     public ConceptoSalarial actualizarConcepto(Integer id, ConceptoSalarialDTO conceptoSalarialDTO) {
         // Verificar si el concepto salarial existe
         ConceptoSalarial concepto = conceptoSalarialRepository.findById(id)

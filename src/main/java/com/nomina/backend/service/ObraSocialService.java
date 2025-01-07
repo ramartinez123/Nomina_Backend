@@ -1,59 +1,80 @@
 package com.nomina.backend.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.nomina.backend.Iservice.IobraSocialService;
+import com.nomina.backend.dto.ObraSocialDTO;
+import com.nomina.backend.model.ObraSocial;
+import com.nomina.backend.repository.ObraSocialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nomina.backend.Iservice.IobraSocialService;
-import com.nomina.backend.model.ObraSocial;
-import com.nomina.backend.repository.ObraSocialRepository; // Asegúrate de que este repositorio existe
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ObraSocialService implements IobraSocialService {
 
     @Autowired
-    private ObraSocialRepository obraSocialRepository; // Inyección de dependencia del repositorio
+    private ObraSocialRepository obraSocialRepository;
 
     @Override
-    public List<ObraSocial> listObraSocial() {
-        return obraSocialRepository.findAll(); // Retorna todas las obras sociales
+    public List<ObraSocialDTO> listObraSocial() {
+        List<ObraSocial> obrasSociales = obraSocialRepository.findAll();
+        return obrasSociales.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-	public Optional<ObraSocial> findById(Integer id) {
-		return obraSocialRepository.findById(id);
-	}
+    public Optional<ObraSocialDTO> findById(Integer id) {
+        Optional<ObraSocial> obraSocial = obraSocialRepository.findById(id);
+        return obraSocial.map(this::convertToDTO);
+    }
 
     @Override
-    public int saveObraSocial(ObraSocial obraSocial) {
-        try {
-            ObraSocial savedObraSocial = obraSocialRepository.save(obraSocial); // Guarda la obra social en la base de datos
-            return savedObraSocial.getIdObraSocial(); // Retorna el ID de la obra social guardada
-        } catch (Exception e) {
-            System.err.println("Error al guardar la obra social: " + e.getMessage());
-            return -1;
+    public ObraSocialDTO createObraSocial(ObraSocialDTO obraSocialDTO) {
+        ObraSocial obraSocial = new ObraSocial();
+        obraSocial.setNombre(obraSocialDTO.getNombre());
+        obraSocial.setDescripcion(obraSocialDTO.getDescripcion());
+
+        ObraSocial savedObraSocial = obraSocialRepository.save(obraSocial);
+        return convertToDTO(savedObraSocial);
+    }
+
+    @Override
+    public ObraSocialDTO updateObraSocial(int id, ObraSocialDTO obraSocialDTO) {
+        Optional<ObraSocial> existingObraSocialOpt = obraSocialRepository.findById(id);
+        if (existingObraSocialOpt.isPresent()) {
+            ObraSocial existingObraSocial = existingObraSocialOpt.get();
+            existingObraSocial.setNombre(obraSocialDTO.getNombre());
+            existingObraSocial.setDescripcion(obraSocialDTO.getDescripcion());
+
+            ObraSocial updatedObraSocial = obraSocialRepository.save(existingObraSocial);
+            return convertToDTO(updatedObraSocial);
         }
+        throw new RuntimeException("Obra Social no encontrada para actualizar");
     }
 
     @Override
     public boolean deleteObraSocial(int id) {
-        try {
-            if (obraSocialRepository.existsById(id)) { // Verifica si la obra social existe antes de intentar eliminarla
-                obraSocialRepository.deleteById(id);
-                return true; // Devuelve true si la eliminación fue exitosa
-            } else {
-                return false; // Devuelve false si la obra social no existe
-            }
-        } catch (Exception e) {
-            System.err.println("Error al eliminar la obra social: " + e.getMessage());
-            return false; // Devuelve false en caso de error
+        if (obraSocialRepository.existsById(id)) {
+            obraSocialRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
-    @Override
-    public List<ObraSocial> findByNombre(String nombre) {
-        return obraSocialRepository.findByNombre(nombre); // Busca obras sociales por su nombre
+    private ObraSocialDTO convertToDTO(ObraSocial obraSocial) {
+        return new ObraSocialDTO(
+                obraSocial.getIdObraSocial(),
+                obraSocial.getNombre(),
+                obraSocial.getDescripcion()
+        );
     }
+
+	@Override
+	public List<ObraSocial> findByNombre(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

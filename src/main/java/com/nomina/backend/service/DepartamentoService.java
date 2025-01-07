@@ -1,59 +1,73 @@
 package com.nomina.backend.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.nomina.backend.Iservice.IdepartamentoService;
+import com.nomina.backend.dto.DepartamentoDTO;
+import com.nomina.backend.model.Departamento;
+import com.nomina.backend.repository.DepartamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nomina.backend.Iservice.IdepartamentoService;
-import com.nomina.backend.model.Departamento;
-import com.nomina.backend.repository.DepartamentoRepository; // Asegúrate de que este repositorio existe
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartamentoService implements IdepartamentoService {
 
     @Autowired
-    private DepartamentoRepository departamentoRepository; // Inyección de dependencia del repositorio
+    private DepartamentoRepository departamentoRepository;
 
     @Override
-    public List<Departamento> listDepartamento() {
-        return departamentoRepository.findAll(); // Retorna todos los departamentos
+    public List<DepartamentoDTO> listDepartamento() {
+        List<Departamento> departamentos = departamentoRepository.findAll();
+        return departamentos.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-	public Optional<Departamento> findById(Integer id) {
-		return departamentoRepository.findById(id);
+    public Optional<DepartamentoDTO> getDepartamentoById(int id) {
+        Optional<Departamento> departamento = departamentoRepository.findById(id);
+        return departamento.map(this::convertToDTO);
+    }
+
+    @Override
+    public DepartamentoDTO createDepartamento(DepartamentoDTO departamentoDTO) {
+        Departamento departamento = new Departamento();
+        departamento.setNombre(departamentoDTO.getNombre());
+        departamento.setDescripcion(departamentoDTO.getDescripcion());
+
+        Departamento savedDepartamento = departamentoRepository.save(departamento);
+        return convertToDTO(savedDepartamento);
+    }
+
+    @Override
+    public DepartamentoDTO updateDepartamento(int id, DepartamentoDTO departamentoDTO) {
+        Optional<Departamento> existingDepartamentoOpt = departamentoRepository.findById(id);
+        if (existingDepartamentoOpt.isPresent()) {
+            Departamento existingDepartamento = existingDepartamentoOpt.get();
+            existingDepartamento.setNombre(departamentoDTO.getNombre());
+            existingDepartamento.setDescripcion(departamentoDTO.getDescripcion());
+
+            Departamento updatedDepartamento = departamentoRepository.save(existingDepartamento);
+            return convertToDTO(updatedDepartamento);
+        }
+        throw new RuntimeException("Departamento no encontrado para actualizar");
+    }
+
+    private DepartamentoDTO convertToDTO(Departamento departamento) {
+        return new DepartamentoDTO(departamento.getIdDepartamento(), departamento.getNombre(), departamento.getDescripcion());
+    }
+
+	@Override
+	public boolean deleteDepartamento(int id) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
-    @Override
-    public int saveDepartamento(Departamento departamento) {
-        try {
-            Departamento savedDepartamento = departamentoRepository.save(departamento); // Guarda el departamento en la base de datos
-            return savedDepartamento.getIdDepartamento(); // Retorna el ID del departamento guardado
-        } catch (Exception e) {
-            System.err.println("Error al guardar el departamento: " + e.getMessage());
-            return -1;
-        }
-    }
-
-    @Override
-    public boolean deleteDepartamento(int id) {
-        try {
-            if (departamentoRepository.existsById(id)) { // Verifica si el departamento existe antes de intentar eliminarlo
-                departamentoRepository.deleteById(id);
-                return true; // Devuelve true si la eliminación fue exitosa
-            } else {
-                return false; // Devuelve false si el departamento no existe
-            }
-        } catch (Exception e) {
-            System.err.println("Error al eliminar el departamento: " + e.getMessage());
-            return false; // Devuelve false en caso de error
-        }
-    }
-
-    @Override
-    public List<Departamento> findByNombre(String nombre) {
-        return departamentoRepository.findByNombre(nombre); // Busca departamentos por su nombre
-    }
+	@Override
+	public List<DepartamentoDTO> findByNombre(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

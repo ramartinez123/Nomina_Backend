@@ -41,21 +41,21 @@ public class EmpleadoDTO {
     private Integer idCategoria; // Solo el ID, si es necesario
     
     @JsonView(EmpleadoViews.Basica.class)
-    private Integer idPuesto; // Solo el ID, si es necesario
+    private Integer idPuesto; 
     
     @JsonView(EmpleadoViews.Basica.class)
     private Date fechaInicio;
     private Date fechaFin;
     private Integer diasVacacionesPactadas;
-    private String estadoEmpleado; // Considera cambiar a enum o ID según sea necesario
+    private String estadoEmpleado;
     private String nacionalidad;
-    private String estadoCivil; // Considera cambiar a enum o ID según sea necesario
-    private String genero; // Considera cambiar a enum o ID según sea necesario
-    private Integer idObraSocial; // Solo el ID, si es necesario
+    private String estadoCivil; 
+    private String genero; 
+    private Integer idObraSocial; 
     private String cbu;
-    private Integer idBanco; // Solo el ID, si es necesario
-    private String tipoCuentaBancaria; // Considera cambiar a enum o ID según sea necesario
-    private String tipoContrato; // Considera cambiar a enum o ID según sea necesario
+    private Integer idBanco; 
+    private String tipoCuentaBancaria; 
+    private String tipoContrato; 
     
     @JsonView(EmpleadoViews.Basica.class)
     private String cuil;

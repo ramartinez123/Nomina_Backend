@@ -1,60 +1,74 @@
 package com.nomina.backend.service;
 
-import java.util.List;
-import java.util.Optional;
+import com.nomina.backend.Iservice.IconvenioService;
+import com.nomina.backend.dto.ConvenioDTO;
+import com.nomina.backend.model.Convenio;
+import com.nomina.backend.repository.ConvenioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.nomina.backend.Iservice.IconvenioService;
-import com.nomina.backend.model.Convenio;
-import com.nomina.backend.repository.ConvenioRepository; // Asegúrate de que este repositorio existe
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ConvenioService implements IconvenioService {
 
     @Autowired
-    private ConvenioRepository convenioRepository; // Inyección de dependencia del repositorio
+    private ConvenioRepository convenioRepository;
 
     @Override
-    public List<Convenio> listConvenio() {
-        return convenioRepository.findAll(); // Retorna todos los convenios
+    public List<ConvenioDTO> listConvenios() {
+        List<Convenio> convenios = convenioRepository.findAll();
+        return convenios.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<ConvenioDTO> getConvenioById(int id) {
+        Optional<Convenio> convenio = convenioRepository.findById(id);
+        return convenio.map(this::convertToDTO);
+    }
+
+    @Override
+    public ConvenioDTO createConvenio(ConvenioDTO convenioDTO) {
+        Convenio convenio = new Convenio();
+        convenio.setNombre(convenioDTO.getNombre());
+        convenio.setDescripcion(convenioDTO.getDescripcion());
+
+        Convenio savedConvenio = convenioRepository.save(convenio);
+        return convertToDTO(savedConvenio);
+    }
+
+    @Override
+    public ConvenioDTO updateConvenio(int id, ConvenioDTO convenioDTO) {
+        Optional<Convenio> existingConvenioOpt = convenioRepository.findById(id);
+        if (existingConvenioOpt.isPresent()) {
+            Convenio existingConvenio = existingConvenioOpt.get();
+            existingConvenio.setNombre(convenioDTO.getNombre());
+            existingConvenio.setDescripcion(convenioDTO.getDescripcion());
+
+            Convenio updatedConvenio = convenioRepository.save(existingConvenio);
+            return convertToDTO(updatedConvenio);
+        }
+        throw new RuntimeException("Convenio no encontrado para actualizar");
+    }
+
+    private ConvenioDTO convertToDTO(Convenio convenio) {
+        return new ConvenioDTO(convenio.getIdConvenio(), convenio.getNombre(), convenio.getDescripcion());
     }
 
 	@Override
-	public Optional<Convenio> findById (Integer id) {
-		return convenioRepository.findById(id);
+	public int saveConvenio(Convenio convenio) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
-    @Override
-    public int saveConvenio(Convenio convenio) {
-        try {
-            Convenio savedConvenio = convenioRepository.save(convenio); // Guarda el convenio en la base de datos
-            return savedConvenio.getIdConvenio(); // Retorna el ID del convenio guardado
-        } catch (Exception e) {
-            System.err.println("Error al guardar el convenio: " + e.getMessage());
-            return -1;
-        }
-    }
-
-    @Override
-    public boolean deleteConvenio(int id) {
-        try {
-            if (convenioRepository.existsById(id)) { // Verifica si el convenio existe antes de intentar eliminarlo
-                convenioRepository.deleteById(id);
-                return true; // Devuelve true si la eliminación fue exitosa
-            } else {
-                return false; // Devuelve false si el convenio no existe
-            }
-        } catch (Exception e) {
-            System.err.println("Error al eliminar el convenio: " + e.getMessage());
-            return false; // Devuelve false en caso de error
-        }
-    }
-
-    @Override
-    public List<Convenio> findByNombre(String nombre) {
-        return convenioRepository.findByNombre(nombre); // Busca convenios por su nombre
-    }
-
-
+	@Override
+	public boolean deleteConvenio(int id) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

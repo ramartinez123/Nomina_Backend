@@ -3,12 +3,14 @@ package com.nomina.backend.Iservice;
 import java.util.List;
 import java.util.Optional;
 
-import com.nomina.backend.model.Departamento;
+import com.nomina.backend.dto.DepartamentoDTO;
+
 
 public interface IdepartamentoService {
-	public List<Departamento>listDepartamento();
-	public Optional<Departamento> findById(Integer id);
-	public int saveDepartamento(Departamento departamento);
+	public List<DepartamentoDTO> listDepartamento();
 	public boolean deleteDepartamento(int id);
-	public List<Departamento> findByNombre(String name);
+	public List<DepartamentoDTO> findByNombre(String name);
+	Optional<DepartamentoDTO> getDepartamentoById(int id);
+	DepartamentoDTO createDepartamento(DepartamentoDTO departamentoDTO);
+	DepartamentoDTO updateDepartamento(int id, DepartamentoDTO departamentoDTO);
 }

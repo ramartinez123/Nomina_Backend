@@ -1,16 +1,14 @@
 package com.nomina.backend.controller;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.nomina.backend.dto.BancoDTO;
+import com.nomina.backend.service.BancoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.nomina.backend.Iservice.IbancoService;
-import com.nomina.backend.dto.BancoDTO;
-import com.nomina.backend.model.Banco;
+
+import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
@@ -18,123 +16,54 @@ import com.nomina.backend.model.Banco;
 public class BancoController {
 
     @Autowired
-    private IbancoService bancoService;
+    private BancoService bancoService;
 
-    // Obtener todos los bancos
+    // Método para listar todos los bancos
     @GetMapping
-    public ResponseEntity<?> getAllBancos() {
+    public ResponseEntity<List<BancoDTO>> listarBancos() {
         try {
-            List<Banco> bancos = bancoService.listBanco();
-
-            // Verificar si la lista de bancos está vacía
-            if (bancos.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // No hay contenido
-            }
-
-            List<BancoDTO> bancoDTOs = bancos.stream()
-                    .map(banco -> new BancoDTO(
-                            banco.getIdBanco(),
-                            banco.getNombre(),
-                            banco.getDescripcion()))
-                    .collect(Collectors.toList());
-            return new ResponseEntity<>(bancoDTOs, HttpStatus.OK);
+            List<BancoDTO> bancos = bancoService.listarBancos();
+            return new ResponseEntity<>(bancos, HttpStatus.OK);
         } catch (Exception e) {
             return handleException(e);
         }
     }
 
-    // Obtener un banco por ID
+    // Método para obtener un banco por su ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBancoById(@PathVariable int id) {
+    public ResponseEntity<?> obtenerBancoPorId(@PathVariable int id) {
         try {
-            Optional<Banco> bancoOpt = bancoService.findById(id);
-
-            if (bancoOpt.isPresent()) {
-                Banco banco = bancoOpt.get();
-                BancoDTO bancoDTO = new BancoDTO(
-                        banco.getIdBanco(),
-                        banco.getNombre(),
-                        banco.getDescripcion()
-                );
-                return ResponseEntity.ok(bancoDTO);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
+            Optional<BancoDTO> bancoDTO = bancoService.getBancoById(id);
+            return bancoDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } catch (Exception e) {
             return handleException(e);
         }
     }
 
-    // Crear un nuevo banco
+    // Método para crear un nuevo banco
     @PostMapping
-    public ResponseEntity<?> createBanco(@RequestBody BancoDTO bancoDTO) {
+    public ResponseEntity<?> crearBanco(@RequestBody BancoDTO bancoDTO) {
         try {
-            Banco banco = new Banco();
-            banco.setNombre(bancoDTO.getNombre());
-            banco.setDescripcion(bancoDTO.getDescripcion());
-
-            // Guarda el banco y obtiene el ID
-            int savedId = bancoService.saveBanco(banco);
-            if (savedId == -1) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body("Error al guardar el banco.");
-            }
-            bancoDTO.setIdBanco(savedId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(bancoDTO);
+            BancoDTO creadoBanco = bancoService.createBanco(bancoDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(creadoBanco);
         } catch (Exception e) {
             return handleException(e);
         }
     }
 
-    // Actualizar un banco existente
+    // Método para actualizar un banco
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateBanco(@PathVariable int id, @RequestBody BancoDTO bancoDTO) {
+    public ResponseEntity<?> actualizarBanco(@PathVariable int id, @RequestBody BancoDTO bancoDTO) {
         try {
-            Optional<Banco> existingBancoOpt = bancoService.findById(id);
-
-            if (existingBancoOpt.isPresent()) {
-                Banco existingBanco = existingBancoOpt.get();
-
-                existingBanco.setNombre(bancoDTO.getNombre());
-                existingBanco.setDescripcion(bancoDTO.getDescripcion());
-
-                int updatedId = bancoService.saveBanco(existingBanco);
-                if (updatedId == -1) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Error al actualizar el banco.");
-                }
-                return ResponseEntity.ok("OK");
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Banco no encontrado");
-            }
+            BancoDTO actualizadoBanco = bancoService.updateBanco(id, bancoDTO);
+            return ResponseEntity.ok(actualizadoBanco);
         } catch (Exception e) {
             return handleException(e);
         }
     }
 
-    // Buscar bancos por nombre
-    @GetMapping("/busqueda")
-    public ResponseEntity<?> findByNombre(@RequestParam String nombre) {
-        try {
-            List<Banco> bancos = bancoService.findByNombre(nombre);
-
-            // Convertir cada Banco a BancoDTO
-            List<BancoDTO> bancoDTOs = bancos.stream()
-                    .map(banco -> new BancoDTO(
-                            banco.getIdBanco(),
-                            banco.getNombre(),
-                            banco.getDescripcion()))
-                    .collect(Collectors.toList());
-
-            return new ResponseEntity<>(bancoDTOs, HttpStatus.OK);
-        } catch (Exception e) {
-            return handleException(e);
-        }
-    }
-
-    private ResponseEntity<String> handleException(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error interno del servidor");
+    // Método para manejar excepciones y devolver un error genérico
+    private ResponseEntity<List<BancoDTO>> handleException(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(List.of());
     }
 }
