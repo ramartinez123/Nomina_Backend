@@ -40,8 +40,8 @@ public class SalarioExcedenteService {
                     empleadoOpt.get(),
                     conceptoOpt.get(),
                     salarioExcedenteDTO.getValor(),
-                    java.sql.Date.valueOf(salarioExcedenteDTO.getFechaInicio()),
-                    salarioExcedenteDTO.getFechaFin() != null ? java.sql.Date.valueOf(salarioExcedenteDTO.getFechaFin()) : null
+                    salarioExcedenteDTO.getFechaInicio(),
+                    salarioExcedenteDTO.getFechaFin() != null ? salarioExcedenteDTO.getFechaFin() : null
             );
 
             salarioExcedente = salarioExcedenteRepository.save(salarioExcedente);
@@ -50,8 +50,8 @@ public class SalarioExcedenteService {
                     salarioExcedente.getEmpleado().getId(),
                     salarioExcedente.getConceptoSalarial().getId(),
                     salarioExcedente.getValor(),
-                    salarioExcedente.getFechaInicio().toString(),
-                    salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin().toString() : null
+                    salarioExcedente.getFechaInicio(),
+                    salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin() : null
             );
         } else {
             throw new RuntimeException("Empleado o concepto salarial no encontrado.");
@@ -66,8 +66,8 @@ public class SalarioExcedenteService {
             SalarioExcedente salarioExcedente = salarioExcedenteOpt.get();
             // Actualizar el salario excedente con los nuevos valores
             salarioExcedente.setValor(salarioExcedenteDTO.getValor());
-            salarioExcedente.setFechaInicio(java.sql.Date.valueOf(salarioExcedenteDTO.getFechaInicio()));
-            salarioExcedente.setFechaFin(salarioExcedenteDTO.getFechaFin() != null ? java.sql.Date.valueOf(salarioExcedenteDTO.getFechaFin()) : null);
+            salarioExcedente.setFechaInicio(salarioExcedenteDTO.getFechaInicio());
+            salarioExcedente.setFechaFin(salarioExcedenteDTO.getFechaFin() != null ? salarioExcedenteDTO.getFechaFin() : null);
 
             Optional<Empleado> empleadoOpt = empleadoRepository.findById(salarioExcedenteDTO.getIdEmpleado());
             Optional<ConceptoSalarial> conceptoOpt = conceptoSalarialRepository.findById(salarioExcedenteDTO.getIdConcepto());
@@ -102,8 +102,8 @@ public class SalarioExcedenteService {
                         salarioExcedente.getEmpleado().getId(),
                         salarioExcedente.getConceptoSalarial().getId(),
                         salarioExcedente.getValor(),
-                        salarioExcedente.getFechaInicio().toString(),
-                        salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin().toString() : null
+                        salarioExcedente.getFechaInicio(),	
+                        salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin() : null
                 ))
                 .collect(Collectors.toList());
     }

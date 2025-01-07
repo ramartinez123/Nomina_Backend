@@ -1,4 +1,4 @@
-package com.nomina.backend.service;
+/*package com.nomina.backend.service;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import com.nomina.backend.repository.DetalleLiquidacionRepository;
 import com.nomina.backend.dto.DetalleLiquidacionDTO;
 
 @Service
-public class DetalleLiquidacionCargasSociaelsService {
+  public class DetalleLiquidacionCargasSociaelsService {
 
     @Autowired
     private DetalleLiquidacionRepository repository;	
@@ -17,4 +17,4 @@ public class DetalleLiquidacionCargasSociaelsService {
     public List<DetalleLiquidacionDTO> obtenerLiquidaciones() {
         return repository.obtenerLiquidaciones();
     }
-}
+} */

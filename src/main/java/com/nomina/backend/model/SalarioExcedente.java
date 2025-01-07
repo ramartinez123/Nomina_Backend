@@ -15,6 +15,7 @@ public class SalarioExcedente {
     private int id;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "id_empleado", nullable = false)
     private Empleado empleado;
 

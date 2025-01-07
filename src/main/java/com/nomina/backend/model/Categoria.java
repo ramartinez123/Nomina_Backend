@@ -2,9 +2,7 @@ package com.nomina.backend.model;
 
 import jakarta.persistence.*;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -30,11 +28,6 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Empleado> empleados;
-    //@JsonBackReference
-    
-    /*@OneToMany(mappedBy = "categoria", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<HistoricoValoresCategoria> historicoValores; 
-    @JsonIgnore*/
     
  // Constructor vacío
     public Categoria() {

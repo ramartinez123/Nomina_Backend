@@ -65,7 +65,7 @@ public class Departamento {
         return empleados;
     }
 
-    public void listEmpleados(List<Empleado> empleados) {
+    public void setEmpleados(List<Empleado> empleados) {
         this.empleados = empleados;
     }
 

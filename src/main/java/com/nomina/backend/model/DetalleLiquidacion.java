@@ -95,13 +95,9 @@ public class DetalleLiquidacion {
         this.fechaLiquidacion = fechaLiquidacion;
     }
 
-	public void setConceptoSalarial(Integer conceptoId) {
-		// TODO Auto-generated method stub
-		
+	/*public void setConceptoSalarial(Integer conceptoId) {
 	}
 
 	public void setEmpleado(int empleadoId) {
-		// TODO Auto-generated method stub
-		
-	}
+	}*/
 }

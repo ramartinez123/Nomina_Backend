@@ -2,13 +2,12 @@ package com.nomina.backend.model;
 
 import java.util.Date;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
 @Entity
 @Table(name = "empleados")
@@ -31,8 +30,9 @@ public class Empleado {
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
 
+    @Email(message = "El correo electrónico debe ser válido.")
     @Column(nullable = false, unique = true, length = 40)
-    private String email;
+    private String email;	
 
     @Column(length = 15)
     private String telefono;
@@ -60,7 +60,7 @@ public class Empleado {
     @JsonManagedReference
     private Categoria categoria;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_puesto")
     private Puesto puesto;
 
@@ -118,7 +118,7 @@ public class Empleado {
     private List<DetalleLiquidacion> detalleLiquidaciones;
     
     @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-    @JsonIgnore
+    @JsonBackReference
     private List<SalarioExcedente> salarioExcedente;
     
     @OneToMany(mappedBy = "empleado", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
@@ -179,7 +179,6 @@ public class Empleado {
     }
 
     public Empleado(Integer id) {
-		// TODO Auto-generated constructor stub
 	}
     
  // Getters y Setters
@@ -363,7 +362,6 @@ public class Empleado {
     public ObraSocial getObraSocial() {
         return obraSocial;
     }
-
     public void setObraSocial(ObraSocial obraSocial) {
         this.obraSocial = obraSocial;
     }

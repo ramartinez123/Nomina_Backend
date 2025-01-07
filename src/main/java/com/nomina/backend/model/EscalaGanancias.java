@@ -20,26 +20,26 @@ public class EscalaGanancias {
     private Date fechaFin;
 
     @Column(name = "desde", nullable = false)
-    private int desde; 
+    private Integer desde; 
 
     @Column(name = "hasta", nullable = false)
-    private int hasta; 
+    private Integer hasta; 
 
     @Column(name = "fijo", nullable = false)
-    private int fijo; 
+    private Integer fijo; 
 
     @Column(name = "porcentaje", nullable = false)
-    private int porcentaje; 
+    private Integer porcentaje; 
 
     @Column(name = "excedente", nullable = false)
-    private int excedente; 
+    private Integer excedente; 
 
  // Constructor vacío
     public EscalaGanancias() {
     }
 
     // Constructor lleno
-    public EscalaGanancias(Date fechaInicio, Date fechaFin, int desde, int hasta, int fijo, int porcentaje, int excedente) {
+    public EscalaGanancias(Date fechaInicio, Date fechaFin, Integer desde, Integer hasta, Integer fijo, Integer porcentaje, Integer excedente) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.desde = desde;
@@ -78,7 +78,7 @@ public class EscalaGanancias {
         return desde;
     }
 
-    public void setDesde(int desde) {
+    public void setDesde(Integer desde) {
         this.desde = desde;
     }
 
@@ -86,7 +86,7 @@ public class EscalaGanancias {
         return hasta;
     }
 
-    public void setHasta(int hasta) {
+    public void setHasta(Integer hasta) {
         this.hasta = hasta;
     }
 
@@ -94,7 +94,7 @@ public class EscalaGanancias {
         return fijo;
     }
 
-    public void setFijo(int fijo) {
+    public void setFijo(Integer fijo) {
         this.fijo = fijo;
     }
 
@@ -102,7 +102,7 @@ public class EscalaGanancias {
         return porcentaje;
     }
 
-    public void setPorcentaje(int porcentaje) {
+    public void setPorcentaje(Integer porcentaje) {
         this.porcentaje = porcentaje;
     }
 
@@ -110,7 +110,7 @@ public class EscalaGanancias {
         return excedente;
     }
 
-    public void setExcedente(int excedente) {
+    public void setExcedente(Integer excedente) {
         this.excedente = excedente;
     }
 }

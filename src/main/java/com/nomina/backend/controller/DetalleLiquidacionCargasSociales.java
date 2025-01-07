@@ -1,4 +1,4 @@
-package com.nomina.backend.controller;
+/* com.nomina.backend.controller;
 
 import java.util.List;
 
@@ -24,4 +24,4 @@ public class DetalleLiquidacionCargasSociales {
     public ResponseEntity<List<DetalleLiquidacionDTO>> listarLiquidaciones() {
         return ResponseEntity.ok(service.obtenerLiquidaciones());
     }
-}
+} */

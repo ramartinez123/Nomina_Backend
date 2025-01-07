@@ -1,6 +1,9 @@
 package com.nomina.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,6 +46,8 @@ public class ConceptoSalarial {
     @Column(name = "tipo_valor", nullable = true)
     private TipoValor tipoValor; 
 
+    @NotNull(message = "El monto no puede ser nulo.")
+    @Min(value = 0, message = "El monto no puede ser negativo.")
     @Column(name = "valor", nullable = true)
     private Integer valor; 
 
@@ -240,8 +245,7 @@ public class ConceptoSalarial {
 
     public List<SalarioExcedente> getSalarioExcedente() {
         return salarioExcedente;
-    }
-    
+    }   
 }
 
    

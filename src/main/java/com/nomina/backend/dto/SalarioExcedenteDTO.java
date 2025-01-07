@@ -1,5 +1,7 @@
 package com.nomina.backend.dto;
 
+import java.util.Date;
+
 import com.nomina.backend.model.SalarioExcedente;
 
 public class SalarioExcedenteDTO {
@@ -8,14 +10,14 @@ public class SalarioExcedenteDTO {
     private Integer idEmpleado;  // ID del empleado
     private Integer idConcepto;  // ID del concepto salarial
     private Integer valor;       // El valor del salario excedente
-    private String fechaInicio;  // Fecha de inicio
-    private String fechaFin;     // Fecha de fin (puede ser null)
+    private Date fechaInicio;  // Fecha de inicio
+    private Date fechaFin;     // Fecha de fin (puede ser null)
 
     // Constructor vacío
-    public SalarioExcedenteDTO() {}
+    //public SalarioExcedenteDTO(int i, Integer integer, Integer integer2, int j, Date date, Date date2) {}
 
     // Constructor con los datos
-    public SalarioExcedenteDTO(Integer id, Integer idEmpleado, Integer idConcepto, Integer valor, String fechaInicio, String fechaFin) {
+    public SalarioExcedenteDTO(Integer id, Integer idEmpleado, Integer idConcepto, Integer valor, Date fechaInicio, Date fechaFin) {
         this.id = id;
         this.idEmpleado = idEmpleado;
         this.idConcepto = idConcepto;
@@ -30,11 +32,15 @@ public class SalarioExcedenteDTO {
         this.idEmpleado = salarioExcedente.getEmpleado().getId();
         this.idConcepto = salarioExcedente.getConceptoSalarial().getId();
         this.valor = salarioExcedente.getValor();
-        this.fechaInicio = salarioExcedente.getFechaInicio() != null ? salarioExcedente.getFechaInicio().toString() : null;
-        this.fechaFin = salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin().toString() : null;
+        this.fechaInicio = salarioExcedente.getFechaInicio() != null ? salarioExcedente.getFechaInicio() : null;
+        this.fechaFin = salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin(): null;
     }
 
-    // Getters y Setters
+    public SalarioExcedenteDTO(int id2, Integer id3, Integer id4, int valor2, String string, Object object) {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Getters y Setters
     public Integer getId() {
         return id;
     }
@@ -67,19 +73,19 @@ public class SalarioExcedenteDTO {
         this.valor = valor;
     }
 
-    public String getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaFin() {
+    public Date getFechaFin() {
         return fechaFin;
     }
 
-    public void setFechaFin(String fechaFin) {
+    public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
     }
 }

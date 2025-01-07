@@ -2,6 +2,8 @@ package com.nomina.backend.model;
 
 import java.util.Date;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "deduccion_impuesto_ganancias")
@@ -26,6 +28,8 @@ public class DeduccionImpuestoGanancias {
     @Temporal(TemporalType.DATE)
     private Date fechaFin;
 
+    @NotNull(message = "El monto no puede ser nulo.")
+    @Min(value = 0, message = "El monto no puede ser negativo.")
     @Column(name = "valor", nullable = false)
     private int valor;
     

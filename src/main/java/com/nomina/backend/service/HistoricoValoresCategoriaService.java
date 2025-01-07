@@ -24,8 +24,6 @@ public class HistoricoValoresCategoriaService {
 
     // Crear o Actualizar
     public HistoricoValoresCategoriaDTO save(HistoricoValoresCategoriaDTO dto) {
-    	 System.out.println("Fecha Inicio: " + dto.getFechaInicio());
-    	    System.out.println("Fecha Baja: " + dto.getFechaBaja());
         Categoria categoria = categoriaRepository.findById(dto.getIdCategoria())
                 .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
 
@@ -35,8 +33,8 @@ public class HistoricoValoresCategoriaService {
                 : new HistoricoValoresCategoria();
 
         historico.setCategoria(categoria);
-        historico.setFechaInicio(java.sql.Date.valueOf(dto.getFechaInicio()));
-        historico.setFechaBaja(dto.getFechaBaja() != null ? java.sql.Date.valueOf(dto.getFechaBaja()) : null);
+        historico.setFechaInicio(dto.getFechaInicio());
+        historico.setFechaBaja(dto.getFechaBaja() != null ? dto.getFechaBaja() : null);
         historico.setSalario(dto.getSalario());
         historico.setAlmuerzo(dto.getAlmuerzo());
 
@@ -72,8 +70,8 @@ public class HistoricoValoresCategoriaService {
         HistoricoValoresCategoriaDTO dto = new HistoricoValoresCategoriaDTO();
         dto.setId(historico.getId());
         dto.setIdCategoria(historico.getCategoriaId());
-        dto.setFechaInicio(historico.getFechaInicio().toString());
-        dto.setFechaBaja(historico.getFechaBaja() != null ? historico.getFechaBaja().toString() : null);
+        dto.setFechaInicio(historico.getFechaInicio());  // Directo sin conversión
+        dto.setFechaBaja(historico.getFechaBaja());  // Directo sin conversión
         dto.setSalario(historico.getSalario());
         dto.setAlmuerzo(historico.getAlmuerzo());
         return dto;

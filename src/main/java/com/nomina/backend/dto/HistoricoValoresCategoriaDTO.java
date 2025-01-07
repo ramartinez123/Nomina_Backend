@@ -1,5 +1,7 @@
 package com.nomina.backend.dto;
 
+import java.util.Date;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -10,9 +12,8 @@ public class HistoricoValoresCategoriaDTO {
     
     @Column(name = "fecha_inicio", nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")  
-    private String fechaInicio;
-    
-    private String fechaBaja;
+    private Date fechaInicio;   
+    private Date fechaBaja;
     private Integer salario;
     private Integer almuerzo;
 
@@ -33,19 +34,19 @@ public class HistoricoValoresCategoriaDTO {
         this.idCategoria = idCategoria;
     }
 
-    public String getFechaInicio() {
+    public Date getFechaInicio() {
         return fechaInicio;
     }
 
-    public void setFechaInicio(String fechaInicio) {
+    public void setFechaInicio(Date fechaInicio) {
         this.fechaInicio = fechaInicio;
     }
 
-    public String getFechaBaja() {
+    public Date getFechaBaja() {
         return fechaBaja;
     }
 
-    public void setFechaBaja(String fechaBaja) {
+    public void setFechaBaja(Date fechaBaja) {
         this.fechaBaja = fechaBaja;
     }
 

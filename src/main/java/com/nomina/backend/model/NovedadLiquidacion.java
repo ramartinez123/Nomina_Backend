@@ -1,6 +1,9 @@
 package com.nomina.backend.model;
 
-import java.sql.Date;
+
+
+import java.util.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -21,7 +24,7 @@ public class NovedadLiquidacion {
 
     @Column(name = "fechaInicio", nullable = false)
     @Temporal(TemporalType.DATE)
-    private java.sql.Date fechaInicio;
+    private Date fechaInicio;
 
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad; 

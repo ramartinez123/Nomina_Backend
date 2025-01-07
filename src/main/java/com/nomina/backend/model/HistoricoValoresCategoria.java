@@ -3,6 +3,8 @@ package com.nomina.backend.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+
 import java.util.Date;
 
 @Entity
@@ -28,9 +30,11 @@ public class HistoricoValoresCategoria {
     @Temporal(TemporalType.DATE)
     private Date fechaBaja; 
 
+    @Min(value = 0, message = "El salario debe ser positivo")
     @Column(name = "salario")
     private Integer salario; 
 
+    @Min(value = 0, message = "El salario debe ser positivo")
     @Column(name = "almuerzo", nullable = false)
     private Integer almuerzo; 
 
@@ -64,13 +68,13 @@ public class HistoricoValoresCategoria {
         this.categoria = categoria;
     }
 
-    // Exponer solo el ID de la categoría en la respuesta JSON
+
     @JsonProperty("idCategoria")
     public Integer getCategoriaId() {
         return categoria != null ? categoria.getIdCategoria() : null;
     }
 
-    // Métodos para obtener/establecer otros campos
+
     public Date getFechaInicio() {
         return fechaInicio;
     }

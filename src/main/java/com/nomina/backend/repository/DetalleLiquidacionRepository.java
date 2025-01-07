@@ -47,15 +47,5 @@ public interface DetalleLiquidacionRepository extends JpaRepository<DetalleLiqui
 	List<DetalleLiquidacion> findByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, Integer conceptoId,
 			java.util.Date periodo);
 	
-	@Query("SELECT new com.nomina.backend.dto.DetalleLiquidacionDTO(e.id, e.apellido, e.nombre, " +
-		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1001 THEN dl.monto ELSE 0 END), " +
-		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1002 THEN dl.monto ELSE 0 END), " +
-		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1003 THEN dl.monto ELSE 0 END), " +
-		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1004 THEN dl.monto ELSE 0 END), " +
-		       "SUM(CASE WHEN dl.conceptoSalarial.id = 1005 THEN dl.monto ELSE 0 END)) " +
-		       "FROM DetalleLiquidacion dl " +
-		       "JOIN dl.empleado e " +
-		       "GROUP BY e.id, e.apellido, e.nombre")
-		List<DetalleLiquidacionDTO> obtenerLiquidaciones();
 	
 }

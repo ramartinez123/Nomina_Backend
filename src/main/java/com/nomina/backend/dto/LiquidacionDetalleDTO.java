@@ -4,10 +4,10 @@ public class LiquidacionDetalleDTO {
     private int id;
     private String apellido;
     private String nombre;
-    private int montoConcepto491;
+    private Integer montoConcepto491;
 
     // Constructor
-    public LiquidacionDetalleDTO(int id, String apellido, String nombre, int montoConcepto491) {
+    public LiquidacionDetalleDTO(int id, String apellido, String nombre, Integer montoConcepto491) {
         this.id = id;
         this.apellido = apellido;
         this.nombre = nombre;
@@ -43,7 +43,7 @@ public class LiquidacionDetalleDTO {
         return montoConcepto491;
     }
 
-    public void setMontoConcepto491(int montoConcepto491) {
+    public void setMontoConcepto491(Integer montoConcepto491) {
         this.montoConcepto491 = montoConcepto491;
     }
 }

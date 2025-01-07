@@ -1,6 +1,8 @@
 package com.nomina.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class AdicionalPermanencia {
@@ -13,9 +15,13 @@ public class AdicionalPermanencia {
     @JoinColumn(name = "id_convenio", referencedColumnName = "id_convenio")
     private Convenio convenio; 
     
+  	@NotNull(message = "Los años de antigüedad no pueden ser nulos.")
+    @Min(value = 0, message = "Los años de antigüedad no pueden ser negativos.")
     @Column(name = "anos_antiguedad")
-    private Integer anosAntiguedad;
+    private Integer aniosAntiguedad;
     
+    @NotNull(message = "El monto no puede ser nulo.")
+    @Min(value = 0, message = "El monto no puede ser negativo.")
     @Column(name = "monto")
     private Integer monto;
 
@@ -26,7 +32,7 @@ public class AdicionalPermanencia {
     public AdicionalPermanencia(Integer id, Convenio convenio, Integer anosAntiguedad, Integer monto) {
         this.id = id;
         this.convenio = convenio;
-        this.anosAntiguedad = anosAntiguedad;
+        this.aniosAntiguedad = anosAntiguedad;
         this.monto = monto;
     }
 
@@ -48,11 +54,11 @@ public class AdicionalPermanencia {
     }
 
     public Integer getAnosAntiguedad() {
-        return anosAntiguedad;
+        return aniosAntiguedad;
     }
 
     public void setAnosAntiguedad(Integer anosAntiguedad) {
-        this.anosAntiguedad = anosAntiguedad;
+        this.aniosAntiguedad = anosAntiguedad;
     }
 
     public Integer getMonto() {

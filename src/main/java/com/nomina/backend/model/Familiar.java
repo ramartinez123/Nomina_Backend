@@ -1,6 +1,9 @@
 package com.nomina.backend.model;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +18,7 @@ public class Familiar {
     private String idParentesco; 
     
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "id_empleado") 
     private Empleado empleado;
 
@@ -33,17 +37,17 @@ public class Familiar {
     @Temporal(TemporalType.DATE)
     private Date fechaFin; 
     
+    //Esta a cargo para Imp a las Ganancias    
     @Column(name = "a_cargo", nullable = false)
     private boolean aCargo; 
     
+    //Esta a cargo para cobertura medica
     @Column(name = "a_cargo_osocial", nullable = false)
     private boolean aCargoOSocial; 
 
     @Column(name = "tiene_discapacidad", nullable = false)
     private boolean tieneDiscapacidad; 
-    
-    
-    
+      
     
     // Getters y Setters
     public int getId() {
