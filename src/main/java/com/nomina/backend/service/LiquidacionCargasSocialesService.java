@@ -31,11 +31,11 @@ public class LiquidacionCargasSocialesService {
         System.out.println("Fecha de inicio del mes: " + fechaInicio);
 
         // Obtener los registros del concepto 91
-        List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByConceptoSalarial_Id(91);
+        List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByConceptoSalarialAndFechaLiquidacion(91, mes, anio);;
         System.out.println("Número de detalles obtenidos para concepto 91: " + detalles.size());
 
         // Obtener conceptos
-        ConceptoSalarial[] conceptos = {
+        ConceptoSalarial[] conceptos = {	
                 conceptoSalarialRepository.findById(1001).orElseThrow(() -> new RuntimeException("ConceptoSalarial 1001 no encontrado")),
                 conceptoSalarialRepository.findById(1002).orElseThrow(() -> new RuntimeException("ConceptoSalarial 1002 no encontrado")),
                 conceptoSalarialRepository.findById(1003).orElseThrow(() -> new RuntimeException("ConceptoSalarial 1003 no encontrado")),

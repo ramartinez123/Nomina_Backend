@@ -70,8 +70,8 @@ public class HistoricoValoresCategoriaService {
         HistoricoValoresCategoriaDTO dto = new HistoricoValoresCategoriaDTO();
         dto.setId(historico.getId());
         dto.setIdCategoria(historico.getCategoriaId());
-        dto.setFechaInicio(historico.getFechaInicio());  // Directo sin conversión
-        dto.setFechaBaja(historico.getFechaBaja());  // Directo sin conversión
+        dto.setFechaInicio(historico.getFechaInicio()); 
+        dto.setFechaBaja(historico.getFechaBaja());  
         dto.setSalario(historico.getSalario());
         dto.setAlmuerzo(historico.getAlmuerzo());
         return dto;

@@ -17,22 +17,20 @@ public class ObraSocialService implements IobraSocialService {
     @Autowired
     private ObraSocialRepository obraSocialRepository;
 
-    @Override
-    public List<ObraSocialDTO> listObraSocial() {
-        List<ObraSocial> obrasSociales = obraSocialRepository.findAll();
-        return obrasSociales.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+ 
+    public List<ObraSocialDTO> listarObraSocial() {
+        List<ObraSocial> bancos = (List<ObraSocial>) obraSocialRepository.findAll();
+        return bancos.stream()
+                     .map(this::convertToDTO)
+                     .collect(Collectors.toList());
     }
 
-    @Override
-    public Optional<ObraSocialDTO> findById(Integer id) {
-        Optional<ObraSocial> obraSocial = obraSocialRepository.findById(id);
-        return obraSocial.map(this::convertToDTO);
+    // Obtener un banco por ID
+    public Optional<ObraSocialDTO> getObraSocialById(int id) {
+        return obraSocialRepository.findById(id).map(this::convertToDTO);
     }
-
-    @Override
-    public ObraSocialDTO createObraSocial(ObraSocialDTO obraSocialDTO) {
+    
+     public ObraSocialDTO createObraSocial(ObraSocialDTO obraSocialDTO) {
         ObraSocial obraSocial = new ObraSocial();
         obraSocial.setNombre(obraSocialDTO.getNombre());
         obraSocial.setDescripcion(obraSocialDTO.getDescripcion());
@@ -41,7 +39,6 @@ public class ObraSocialService implements IobraSocialService {
         return convertToDTO(savedObraSocial);
     }
 
-    @Override
     public ObraSocialDTO updateObraSocial(int id, ObraSocialDTO obraSocialDTO) {
         Optional<ObraSocial> existingObraSocialOpt = obraSocialRepository.findById(id);
         if (existingObraSocialOpt.isPresent()) {
@@ -55,7 +52,6 @@ public class ObraSocialService implements IobraSocialService {
         throw new RuntimeException("Obra Social no encontrada para actualizar");
     }
 
-    @Override
     public boolean deleteObraSocial(int id) {
         if (obraSocialRepository.existsById(id)) {
             obraSocialRepository.deleteById(id);
@@ -73,8 +69,14 @@ public class ObraSocialService implements IobraSocialService {
     }
 
 	@Override
-	public List<ObraSocial> findByNombre(String name) {
+	public List<ObraSocial> listObraSocial() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public Optional<ObraSocialDTO> findById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

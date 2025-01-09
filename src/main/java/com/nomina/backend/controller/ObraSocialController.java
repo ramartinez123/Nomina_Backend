@@ -21,7 +21,7 @@ public class ObraSocialController {
     @GetMapping
     public ResponseEntity<?> getAllObrasSociales() {
         try {
-            List<ObraSocialDTO> obrasSociales = obraSocialService.listObraSocial();
+            List<ObraSocialDTO> obrasSociales = obraSocialService.listarObraSocial();
             return new ResponseEntity<>(obrasSociales, HttpStatus.OK);
         } catch (Exception e) {
             return handleException(e);

@@ -70,4 +70,10 @@ public class DepartamentoService implements IdepartamentoService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Optional<Departamento> findById(Integer idDepartamento) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
 }

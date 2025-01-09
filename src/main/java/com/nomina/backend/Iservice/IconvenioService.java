@@ -16,4 +16,5 @@ public interface IconvenioService {
 	//Optional<ConvenioDTO> getConvenioById(int id);
 	ConvenioDTO createConvenio(ConvenioDTO convenioDTO);
 	ConvenioDTO updateConvenio(int id, ConvenioDTO convenioDTO);
+	public Optional<Convenio> findById(Integer idConvenio);
 }

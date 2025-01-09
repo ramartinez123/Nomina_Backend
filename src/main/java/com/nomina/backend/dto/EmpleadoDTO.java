@@ -5,6 +5,11 @@ package com.nomina.backend.dto;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.nomina.backend.model.EstadoCivil;
+import com.nomina.backend.model.EstadoEmpleado;
+import com.nomina.backend.model.Genero;
+import com.nomina.backend.model.TipoContrato;
+import com.nomina.backend.model.TipoCuentaBancaria;
 
 
 public class EmpleadoDTO {
@@ -67,13 +72,27 @@ public class EmpleadoDTO {
     public EmpleadoDTO() {}
 
     // Constructor completo
-    public EmpleadoDTO(Integer id, String nombre, String apellido, String dni, Date fechaNacimiento, String email,
+    
+   /* public EmpleadoDTO(Integer id, String nombre, String apellido, String dni, Date fechaNacimiento, String email,
+            String telefono, String direccion, String ciudad, Integer idProvincia, Integer idDepartamento,
+            Integer idConvenio, Integer idCategoria, Integer idPuesto, Date fechaInicio, Date fechaFin,
+            Integer diasVacacionesPactadas, EstadoEmpleado estadoEmpleado, String nacionalidad, EstadoCivil estadoCivil,
+            Genero genero, Integer idObraSocial, String cbu, Integer idBanco, TipoCuentaBancaria tipoCuentaBancaria,
+            TipoContrato tipoContrato, String cuil) {*/
+// Asignar valores
+
+      public EmpleadoDTO(Integer id, String nombre, String apellido, String dni, Date fechaNacimiento, String email,
                        String telefono, String direccion, String ciudad, Integer idProvincia,
                        Integer idDepartamento, Integer idConvenio, Integer idCategoria, Integer idPuesto,
                        Date fechaInicio, Date fechaFin, Integer diasVacacionesPactadas, String estadoEmpleado,
                        String nacionalidad, String estadoCivil, String genero, Integer idObraSocial, String cbu,
                        Integer idBanco, String tipoCuentaBancaria, String tipoContrato, String cuil) {
-        this.id = id;
+       
+    	
+    	
+    	
+    	
+    	this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.dni = dni;

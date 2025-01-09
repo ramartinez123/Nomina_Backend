@@ -13,8 +13,9 @@ public class SalarioExcedenteDTO {
     private Date fechaInicio;  // Fecha de inicio
     private Date fechaFin;     // Fecha de fin (puede ser null)
 
-    // Constructor vacío
-    //public SalarioExcedenteDTO(int i, Integer integer, Integer integer2, int j, Date date, Date date2) {}
+    public SalarioExcedenteDTO() {
+        // Constructor sin parámetros
+    }
 
     // Constructor con los datos
     public SalarioExcedenteDTO(Integer id, Integer idEmpleado, Integer idConcepto, Integer valor, Date fechaInicio, Date fechaFin) {

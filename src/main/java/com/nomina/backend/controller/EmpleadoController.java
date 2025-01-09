@@ -3,7 +3,6 @@ package com.nomina.backend.controller;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import com.nomina.backend.Iservice.IobraSocialService;
 import com.nomina.backend.Iservice.IbancoService;
 import com.nomina.backend.dto.EmpleadoDTO;
 import com.nomina.backend.dto.EmpleadoViews;
+import com.nomina.backend.dto.ObraSocialDTO;
 import com.nomina.backend.model.Banco;
 import com.nomina.backend.model.Convenio;
 import com.nomina.backend.model.Empleado;
@@ -176,8 +176,8 @@ public class EmpleadoController {
 						.body("Banco no encontrado.");
 			}
 
-			Optional<ObraSocial> obraSocialOpt = obraSocialService.findById(empleadoDTO.getIdObraSocial());
-			if (!obraSocialOpt.isPresent()) {
+			Optional<ObraSocial> obraSocialOpt = obraSocialService.findById(empleadoDTO.getIdBanco());
+			if (!bancoOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Obra Social no encontrado.");
 			}
@@ -331,7 +331,6 @@ public class EmpleadoController {
 						.body("Banco no encontrado.");
 			}
 
-			Optional<ObraSocial> obraSocialOpt = obraSocialService.findById(empleadoDTO.getIdObraSocial());
 			if (!obraSocialOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Obra Social no encontrada.");
@@ -425,4 +424,4 @@ public class EmpleadoController {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body("Error interno del servidor: " + e.getMessage());
 	}
-}
+} 

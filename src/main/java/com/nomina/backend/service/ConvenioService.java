@@ -71,4 +71,10 @@ public class ConvenioService implements IconvenioService {
 		return false;
 	}
 
+	@Override
+	public Optional<Convenio> findById(Integer idConvenio) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
+
 }

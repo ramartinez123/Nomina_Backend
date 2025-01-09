@@ -102,9 +102,14 @@ public class SalarioExcedenteService {
                         salarioExcedente.getEmpleado().getId(),
                         salarioExcedente.getConceptoSalarial().getId(),
                         salarioExcedente.getValor(),
-                        salarioExcedente.getFechaInicio(),	
+                        salarioExcedente.getFechaInicio(),
                         salarioExcedente.getFechaFin() != null ? salarioExcedente.getFechaFin() : null
                 ))
                 .collect(Collectors.toList());
     }
+
+	public SalarioExcedenteDTO getSalarioExcedenteById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -56,4 +56,4 @@ public class EmpleadoService implements IempleadoService {
     public List<Empleado> findByNombre(String nombre) {
         return empleadoRepository.findByNombre(nombre); // Busca empleados por su nombre
     }
-}
+} 

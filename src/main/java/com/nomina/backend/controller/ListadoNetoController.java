@@ -2,9 +2,10 @@ package com.nomina.backend.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.nomina.backend.dto.LiquidacionDetalleDTO;
-import com.nomina.backend.repository.DetalleLiquidacionRepository;
+import com.nomina.backend.service.ListadoNetoService;
 
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
@@ -12,27 +13,21 @@ import com.nomina.backend.repository.DetalleLiquidacionRepository;
 public class ListadoNetoController {
 
     @Autowired
-    private DetalleLiquidacionRepository detalleLiquidacionRepository;
+    private ListadoNetoService listadoNetoService;
 
-    /**
-     * Endpoint para obtener liquidaciones del concepto 491 filtradas por mes y año.
-     * @param mes Mes de la liquidación (1-12)
-     * @param anio Año de la liquidación
-     * @return Lista de LiquidacionDetalleDTO
-     */
     @GetMapping("/concepto-491")
-    public List<LiquidacionDetalleDTO> getByConcepto491(
-       int mes,
-       int anio
+    public ResponseEntity<List<LiquidacionDetalleDTO>> getByConcepto491(
+        @RequestParam int mes,
+        @RequestParam int anio
     ) {
-        // Validaciones simples para mes y año
-        if (mes < 1 || mes > 12) {
-            throw new IllegalArgumentException("El mes debe estar entre 1 y 12.");
+        try {
+            List<LiquidacionDetalleDTO> detalles = listadoNetoService.obtenerLiquidacionesPorConcepto491(mes, anio);
+            if (detalles.isEmpty()) {
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(detalles);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
         }
-        if (anio < 1900 || anio > 2100) {
-            throw new IllegalArgumentException("El año debe estar en un rango razonable (1900-2100).");
-        }
-        
-        return detalleLiquidacionRepository.findByConcepto491AndMesAndAnio(mes, anio);
     }
 }

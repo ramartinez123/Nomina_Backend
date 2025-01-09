@@ -64,4 +64,10 @@ public class PuestoService implements IpuestoService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Optional<Puesto> findById(Integer idPuesto) {
+		// TODO Auto-generated method stub
+		return Optional.empty();
+	}
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.nomina.backend.dto.DepartamentoDTO;
+import com.nomina.backend.model.Departamento;
 
 
 public interface IdepartamentoService {
@@ -13,4 +14,5 @@ public interface IdepartamentoService {
 	Optional<DepartamentoDTO> getDepartamentoById(int id);
 	DepartamentoDTO createDepartamento(DepartamentoDTO departamentoDTO);
 	DepartamentoDTO updateDepartamento(int id, DepartamentoDTO departamentoDTO);
+	public Optional<Departamento> findById(Integer idDepartamento);
 }

@@ -17,4 +17,6 @@ public interface IpuestoService {
 
 	PuestoDTO updatePuesto(int id, PuestoDTO puestoDTO);
 
+	public Optional<Puesto> findById(Integer idPuesto);
+
 }

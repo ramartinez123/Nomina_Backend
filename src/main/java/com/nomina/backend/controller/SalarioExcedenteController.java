@@ -2,6 +2,8 @@ package com.nomina.backend.controller;
 
 import com.nomina.backend.dto.SalarioExcedenteDTO;
 import com.nomina.backend.service.SalarioExcedenteService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +22,52 @@ public class SalarioExcedenteController {
 
     // Crear un Salario Excedente
     @PostMapping
-    public ResponseEntity<SalarioExcedenteDTO> createSalarioExcedente(@RequestBody SalarioExcedenteDTO salarioExcedenteDTO) {
-        SalarioExcedenteDTO created = salarioExcedenteService.createSalarioExcedente(salarioExcedenteDTO);
-        return ResponseEntity.status(201).body(created);
+    public ResponseEntity<?> createSalarioExcedente(@RequestBody SalarioExcedenteDTO salarioExcedenteDTO) {
+        try {
+            SalarioExcedenteDTO salarioExcedenteCreado = salarioExcedenteService.createSalarioExcedente(salarioExcedenteDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(salarioExcedenteCreado);
+        } catch (Exception e) {
+            return manejarExcepcion(e);
+        }
     }
 
     // Actualizar un Salario Excedente
-    @PutMapping("/{id}")
-    public ResponseEntity<SalarioExcedenteDTO> updateSalarioExcedente(@PathVariable int id, @RequestBody SalarioExcedenteDTO salarioExcedenteDTO) {
-        SalarioExcedenteDTO updated = salarioExcedenteService.updateSalarioExcedente(id, salarioExcedenteDTO);
-        return ResponseEntity.ok(updated);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getSalarioExcedenteById(@PathVariable int id) {
+        try {
+            SalarioExcedenteDTO salarioExcedente = salarioExcedenteService.getSalarioExcedenteById(id);
+            return ResponseEntity.ok(salarioExcedente);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salario Excedente no encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            return manejarExcepcion(e);
+        }
     }
 
     // Listar todos los Salarios Excedentes
     @GetMapping
-    public ResponseEntity<List<SalarioExcedenteDTO>> getAllSalariosExcedentes() {
-        List<SalarioExcedenteDTO> salariosExcedentes = salarioExcedenteService.getAllSalariosExcedentes();
-        return ResponseEntity.ok(salariosExcedentes);
+    public ResponseEntity<?> getAllSalariosExcedentes() {
+        try {
+            List<SalarioExcedenteDTO> salariosExcedentes = salarioExcedenteService.getAllSalariosExcedentes();
+            return ResponseEntity.ok(salariosExcedentes);  
+        } catch (Exception e) {
+            return manejarExcepcion(e);
+        }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateSalarioExcedente(@PathVariable int id, @RequestBody SalarioExcedenteDTO salarioExcedenteDTO) {
+        try {
+            SalarioExcedenteDTO salarioExcedenteActualizado = salarioExcedenteService.updateSalarioExcedente(id, salarioExcedenteDTO);
+            return ResponseEntity.ok(salarioExcedenteActualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Salario Excedente no encontrado: " + e.getMessage());
+        } catch (Exception e) {
+            return manejarExcepcion(e);
+        }
+    }
+    
+    private ResponseEntity<?> manejarExcepcion(Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno: " + e.getMessage());
     }
 }

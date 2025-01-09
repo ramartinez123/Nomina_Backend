@@ -14,7 +14,7 @@ public class CargasSocialesController {
     @Autowired
     private LiquidacionCargasSocialesService liquidacionCargasSocialesService;
 
-    // Endpoint para procesar cargas sociales pasando mes y año
+
     @GetMapping("/procesar-cargas-sociales")
     public String procesarCargasSociales(@RequestParam int mes, @RequestParam int anio) {
         try {
