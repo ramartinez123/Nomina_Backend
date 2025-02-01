@@ -1,15 +1,10 @@
 package com.nomina.backend.dto;
 
 
-
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.nomina.backend.model.EstadoCivil;
-import com.nomina.backend.model.EstadoEmpleado;
-import com.nomina.backend.model.Genero;
-import com.nomina.backend.model.TipoContrato;
-import com.nomina.backend.model.TipoCuentaBancaria;
+
 
 
 public class EmpleadoDTO {

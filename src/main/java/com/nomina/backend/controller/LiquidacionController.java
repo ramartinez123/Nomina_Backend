@@ -1,11 +1,9 @@
-	package com.nomina.backend.controller;
+package com.nomina.backend.controller;
 
 
 import com.nomina.backend.service.AnulaBajaEmpleadoService;
-import com.nomina.backend.service.AsientoComtablesService;
 import com.nomina.backend.service.BajaEmpleadoService;
 import com.nomina.backend.service.LiquidacionImpuestoGananciasService;
-import com.nomina.backend.service.LiquidacionNovedadesService;
 import com.nomina.backend.service.LiquidacionRetencionesService;
 import com.nomina.backend.service.LiquidacionSueldoService;
 import com.nomina.backend.service.LiquidacionTotalesHaberesService;
@@ -29,9 +27,6 @@ public class LiquidacionController {
     
     @Autowired
     private LiquidacionSueldoIdService liquidacionServiceById;
-    
-    @Autowired
-    private LiquidacionNovedadesService liquidacionNovedadesService;
     
     @Autowired
     private LiquidacionTotalesHaberesService liquidacionTotalesHaberesService;
@@ -59,15 +54,6 @@ public class LiquidacionController {
         }
     }
     
-    @PostMapping("/novedades") 
-    public ResponseEntity<String> procesarNovedades() {
-        try {
-        	liquidacionNovedadesService.procesarNovedades(); // Llama al servicio para realizar la liquidación
-            return ResponseEntity.ok("Liquidación realizada exitosamente");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al realizar la liquidación: " + e.getMessage());
-        }
-    }
     
     @PostMapping("/totalesHaberes") 
     public ResponseEntity<String> liquidacionTotalesHaberesService() {

@@ -9,27 +9,27 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
+import com.nomina.backend.model.Empleado;
 import com.nomina.backend.model.NovedadLiquidacion;
 
 @Repository
 public interface NovedadLiquidacionRepository extends JpaRepository<NovedadLiquidacion, Integer> {
 	
-	@Query("SELECT n FROM NovedadLiquidacion n WHERE n.conceptoSalarial.id IN :ids AND n.fechaInicio BETWEEN :fechaInicio AND :fechaFin")
-    List<NovedadLiquidacion> findByConceptoSalarialIdAndFecha(@Param("ids") List<Integer> ids, 
-                                                                @Param("fechaInicio") Date fechaInicio, 
-                                                                @Param("fechaFin") Date fechaFin);
+		@Query("SELECT n FROM NovedadLiquidacion n WHERE n.conceptoSalarial.id IN :ids AND n.fechaInicio BETWEEN :fechaInicio AND :fechaFin")
+	    List<NovedadLiquidacion> findByConceptoSalarialIdAndFecha(@Param("ids") List<Integer> ids, 
+	                                                                @Param("fechaInicio") Date fechaInicio, 
+	                                                                @Param("fechaFin") Date fechaFin);
     
     
-    /* List<NovedadLiquidacion> findByConceptoSalarialIdAndFecha(
-            @Param("conceptoIds") List<Integer> conceptoIds, 
-            @Param("fechaInicio") Date fechaInicio, 
-            @Param("fechaFin") Date fechaFin);
-}*/
-
   
     List<NovedadLiquidacion> findByEmpleadoId(Integer empleadoId);
-
-
-    
+    @Query("SELECT n FROM NovedadLiquidacion n " +
+    	       "WHERE n.empleado = :empleado " +
+    	       "AND n.conceptoSalarial.id IN :conceptoIds " +
+    	       "AND n.fechaInicio BETWEEN :fechaInicio AND :fechaFin")
+    	List<NovedadLiquidacion> findByEmpleadoAndConceptoSalarialIdAndFecha(
+    	        @Param("empleado") Empleado empleado,
+    	        @Param("conceptoIds") List<Integer> conceptoIds,
+    	        @Param("fechaInicio") Date fechaInicio,
+    	        @Param("fechaFin") Date fechaFin);
 }

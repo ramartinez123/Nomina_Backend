@@ -1,16 +1,14 @@
 package com.nomina.backend.controller;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.nomina.backend.Iservice.IcategoriaService;
-import com.nomina.backend.Iservice.IconvenioService;
 import com.nomina.backend.dto.CategoriaDTO;
 import com.nomina.backend.model.Categoria;
-import com.nomina.backend.model.Convenio;
+
 
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
@@ -20,8 +18,6 @@ public class CategoriaController {
     @Autowired
     private IcategoriaService categoriaService;
 
-    @Autowired
-    private IconvenioService convenioService;
 
     @GetMapping
     public ResponseEntity<?> getAllCategorias() {

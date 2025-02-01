@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.nomina.backend.dto.LiquidacionDetalleDTO;
+import com.nomina.backend.dto.ListadoNetoDTO;
 import com.nomina.backend.service.ListadoNetoService;
 
 @CrossOrigin(origins = "http://localhost:5173/")
@@ -16,12 +16,12 @@ public class ListadoNetoController {
     private ListadoNetoService listadoNetoService;
 
     @GetMapping("/concepto-491")
-    public ResponseEntity<List<LiquidacionDetalleDTO>> getByConcepto491(
+    public ResponseEntity<List<ListadoNetoDTO>> getByConcepto491(
         @RequestParam int mes,
         @RequestParam int anio
     ) {
         try {
-            List<LiquidacionDetalleDTO> detalles = listadoNetoService.obtenerLiquidacionesPorConcepto491(mes, anio);
+            List<ListadoNetoDTO> detalles = listadoNetoService.obtenerLiquidacionesPorConcepto491(mes, anio);
             if (detalles.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }

@@ -15,128 +15,158 @@ import com.nomina.backend.model.Empleado;
 import com.nomina.backend.repository.ConceptoSalarialRepository;
 import com.nomina.backend.repository.DetalleLiquidacionRepository;
 import com.nomina.backend.repository.EmpleadoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class LiquidacionTotalesHaberesService {
 
-	@Autowired
-	private DetalleLiquidacionRepository detalleLiquidacionRepository;
+    private static final Logger logger = LoggerFactory.getLogger(LiquidacionTotalesHaberesService.class);
 
-	@Autowired
-	private EmpleadoRepository empleadoRepository;
+    @Autowired
+    private DetalleLiquidacionRepository detalleLiquidacionRepository;
 
-	@Autowired
-	private ConceptoSalarialRepository conceptoSalarialRepository;
-	
-	@Autowired
-	private LiquidacionRetencionesService liquidacionRetencionesService;
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
 
-	private enum ConceptoTipo {
-		IMP_APORTES, IMP_GANANCIAS, IMP_INDEMNIZACION, SUELDO_TOTAL, IMP_AGUINALDO
-	}
+    @Autowired
+    private ConceptoSalarialRepository conceptoSalarialRepository;
 
-	public void sumarConceptosYRegistrar() {
-		// Fecha actual e inicio del mes
-		Date fechaActual = new Date(System.currentTimeMillis());
-		Date fechaInicio = obtenerFechaInicioDelMes();
+    @Autowired
+    private LiquidacionRetencionesService liquidacionRetencionesService;
 
-		// Obtener todos los detalles de liquidación
-		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByPeriodo(fechaInicio);
+    private enum ConceptoTipo {
+        IMP_APORTES, IMP_GANANCIAS, IMP_INDEMNIZACION, SUELDO_TOTAL, IMP_AGUINALDO
+    }
 
-		// Mapas para acumular montos por empleado por tipo de concepto
-		Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto = inicializarMapasDeSumas();
+    public void sumarConceptosYRegistrar() {
+        // Fecha actual e inicio del mes
+        Date fechaActual = new Date(System.currentTimeMillis());
+        Date fechaInicio = obtenerFechaInicioDelMes();
 
-		// Iterar y acumular montos por tipo de concepto
-		for (DetalleLiquidacion detalle : detalles.stream()
-				.filter(d -> d.getConceptoSalarial().getId() >= 1 && d.getConceptoSalarial().getId() <= 89)
-				.collect(Collectors.toList())) {
+        // Obtener todos los detalles de liquidación
+        List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByPeriodo(fechaInicio);
 
-			Integer empleadoId = detalle.getEmpleado().getId();
-			Integer monto = detalle.getMonto();
+        // Mapas para acumular montos por empleado por tipo de concepto
+        Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto = inicializarMapasDeSumas();
 
-			acumularMonto(detalle, empleadoId, monto, sumasPorConcepto);
-		}
+        // Iterar y acumular montos por tipo de concepto
+        for (DetalleLiquidacion detalle : detalles.stream()
+                .filter(d -> d.getConceptoSalarial().getId() >= 1 && d.getConceptoSalarial().getId() <= 89)
+                .collect(Collectors.toList())) {
 
-		// Registrar los totales para cada tipo de concepto usando sus IDs específicos
-		registrarTotales(sumasPorConcepto, fechaActual, fechaInicio);
-		
-		//	liquidacionRetencionesService.procesarYRegistrarNuevosDetalles();
-	}
+            Integer empleadoId = detalle.getEmpleado().getId();
+            Integer monto = detalle.getMonto();
 
-	private Date obtenerFechaInicioDelMes() {
-		Calendar calendar = Calendar.getInstance();
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		return new Date(calendar.getTimeInMillis());
-	}
+            acumularMonto(detalle, empleadoId, monto, sumasPorConcepto);
+        }
 
-	private Map<ConceptoTipo, Map<Integer, Integer>> inicializarMapasDeSumas() {
-		Map<ConceptoTipo, Map<Integer, Integer>> map = new EnumMap<>(ConceptoTipo.class);
-		for (ConceptoTipo tipo : ConceptoTipo.values()) {
-			map.put(tipo, new HashMap<>());
-		}
-		return map;
-	}
+        // Registrar los totales para cada tipo de concepto usando sus IDs específicos
+        registrarTotales(sumasPorConcepto, fechaActual, fechaInicio);
+        
+        // Procesar retenciones (si es necesario)
+        //liquidacionRetencionesService.procesarYRegistrarNuevosDetalles();
+    }
 
-	private void acumularMonto(DetalleLiquidacion detalle, Integer empleadoId, Integer monto,
-			Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto) {
-		ConceptoSalarial concepto = detalle.getConceptoSalarial();
+    private Date obtenerFechaInicioDelMes() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return new Date(calendar.getTimeInMillis());
+    }
 
-		if (concepto.getImpAportes()) {
-			sumasPorConcepto.get(ConceptoTipo.IMP_APORTES).merge(empleadoId, monto, Integer::sum);
-		}
-		if (concepto.getImpGanancias()) {
-			sumasPorConcepto.get(ConceptoTipo.IMP_GANANCIAS).merge(empleadoId, monto, Integer::sum);
-		}
-		if (concepto.getImpIndemnizacion()) {
-			sumasPorConcepto.get(ConceptoTipo.IMP_INDEMNIZACION).merge(empleadoId, monto, Integer::sum);
-		}
-		if (concepto.getSueldoTotal()) {
-			sumasPorConcepto.get(ConceptoTipo.SUELDO_TOTAL).merge(empleadoId, monto, Integer::sum);
-		}
-		if (concepto.getImpSac()) {
-			sumasPorConcepto.get(ConceptoTipo.IMP_AGUINALDO).merge(empleadoId, monto, Integer::sum);
-		}
-	}
+    private Map<ConceptoTipo, Map<Integer, Integer>> inicializarMapasDeSumas() {
+        Map<ConceptoTipo, Map<Integer, Integer>> map = new EnumMap<>(ConceptoTipo.class);
+        for (ConceptoTipo tipo : ConceptoTipo.values()) {
+            map.put(tipo, new HashMap<>());
+        }
+        return map;
+    }
 
-	private void registrarTotales(Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto,
-			Date fechaActual, Date fechaInicio) {
-		registrarTotalesPorConcepto(sumasPorConcepto.get(ConceptoTipo.IMP_APORTES), fechaActual, fechaInicio, 91);
-		registrarTotalesPorConcepto(sumasPorConcepto.get(ConceptoTipo.IMP_GANANCIAS), fechaActual, fechaInicio, 92);
-		registrarTotalesPorConcepto(sumasPorConcepto.get(ConceptoTipo.IMP_INDEMNIZACION), fechaActual, fechaInicio, 93);
-		registrarTotalesPorConcepto(sumasPorConcepto.get(ConceptoTipo.SUELDO_TOTAL), fechaActual, fechaInicio, 94);
-		registrarTotalesPorConcepto(sumasPorConcepto.get(ConceptoTipo.IMP_AGUINALDO), fechaActual, fechaInicio, 95);
-	}
+    private void acumularMonto(DetalleLiquidacion detalle, Integer empleadoId, Integer monto,
+                               Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto) {
+        ConceptoSalarial concepto = detalle.getConceptoSalarial();
 
-	private void registrarTotalesPorConcepto(Map<Integer, Integer> sumaPorEmpleado, Date fechaActual,
-			Date fechaInicio, int conceptoId) {
-		for (Map.Entry<Integer, Integer> entry : sumaPorEmpleado.entrySet()) {
-			Integer empleadoId = entry.getKey();
-			Integer sumaTotal = entry.getValue();
+        // Acumulación según tipo de concepto
+        if (concepto.getImpAportes()) {
+            sumasPorConcepto.get(ConceptoTipo.IMP_APORTES).merge(empleadoId, monto, Integer::sum);
+        }
+        if (concepto.getImpGanancias()) {
+            sumasPorConcepto.get(ConceptoTipo.IMP_GANANCIAS).merge(empleadoId, monto, Integer::sum);
+        }
+        if (concepto.getImpIndemnizacion()) {
+            sumasPorConcepto.get(ConceptoTipo.IMP_INDEMNIZACION).merge(empleadoId, monto, Integer::sum);
+        }
+        if (concepto.getSueldoTotal()) {
+            sumasPorConcepto.get(ConceptoTipo.SUELDO_TOTAL).merge(empleadoId, monto, Integer::sum);
+        }
+        if (concepto.getImpSac()) {
+            sumasPorConcepto.get(ConceptoTipo.IMP_AGUINALDO).merge(empleadoId, monto, Integer::sum);
+        }
+    }
 
-			// Verificar si ya existe un registro para el empleado, concepto y período
-			boolean existeRegistro = detalleLiquidacionRepository.existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(
-					empleadoId, conceptoId, fechaInicio);
+    private void registrarTotales(Map<ConceptoTipo, Map<Integer, Integer>> sumasPorConcepto,
+                                  Date fechaActual, Date fechaInicio) {
+        // Registro de totales por cada tipo de concepto
+        for (ConceptoTipo tipo : ConceptoTipo.values()) {
+            Map<Integer, Integer> sumaPorEmpleado = sumasPorConcepto.get(tipo);
+            if (sumaPorEmpleado != null && !sumaPorEmpleado.isEmpty()) {
+                registrarTotalesPorConcepto(sumaPorEmpleado, fechaActual, fechaInicio, obtenerConceptoIdPorTipo(tipo));
+            }
+        }
+    }
 
-			if (existeRegistro) {
-				System.out.println("Registro ya existente para el empleado " + empleadoId +
-						", concepto " + conceptoId + " y periodo " + fechaInicio);
-				continue; // Evitar duplicados y pasar al siguiente
-			}
+    private void registrarTotalesPorConcepto(Map<Integer, Integer> sumaPorEmpleado, Date fechaActual,
+                                              Date fechaInicio, int conceptoId) {
+        for (Map.Entry<Integer, Integer> entry : sumaPorEmpleado.entrySet()) {
+            Integer empleadoId = entry.getKey();
+            Integer sumaTotal = entry.getValue();
 
-			Empleado empleado = empleadoRepository.findById(empleadoId)
-					.orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
-			ConceptoSalarial concepto = conceptoSalarialRepository.findById(conceptoId)
-					.orElseThrow(() -> new RuntimeException("ConceptoSalarial no encontrado"));
+            // Verificar si ya existe un registro para el empleado, concepto y período
+            if (detalleLiquidacionRepository.existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(
+                    empleadoId, conceptoId, fechaInicio)) {
+                logger.warn("Registro ya existente para el empleado " + empleadoId +
+                        ", concepto " + conceptoId + " y periodo " + fechaInicio);
+                continue; // Evitar duplicados y pasar al siguiente
+            }
 
-			// Crear y guardar el nuevo registro de DetalleLiquidacion
-			DetalleLiquidacion nuevoRegistro = new DetalleLiquidacion();
-			nuevoRegistro.setEmpleado(empleado);
-			nuevoRegistro.setMonto(sumaTotal);
-			nuevoRegistro.setConceptoSalarial(concepto);
-			nuevoRegistro.setPeriodo(fechaInicio);
-			nuevoRegistro.setFechaLiquidacion(fechaActual);
+            // Crear y guardar el nuevo registro de DetalleLiquidacion
+            guardarDetalleLiquidacion(empleadoId, conceptoId, sumaTotal, fechaActual, fechaInicio);
+        }
+    }
 
-			detalleLiquidacionRepository.save(nuevoRegistro);
-		}
-	}
+    private void guardarDetalleLiquidacion(Integer empleadoId, int conceptoId, Integer monto,
+                                           Date fechaActual, Date fechaInicio) {
+        try {
+            Empleado empleado = empleadoRepository.findById(empleadoId)
+                    .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+
+            ConceptoSalarial concepto = conceptoSalarialRepository.findById(conceptoId)
+                    .orElseThrow(() -> new RuntimeException("ConceptoSalarial no encontrado"));
+
+            DetalleLiquidacion nuevoRegistro = new DetalleLiquidacion();
+            nuevoRegistro.setEmpleado(empleado);
+            nuevoRegistro.setMonto(monto);
+            nuevoRegistro.setConceptoSalarial(concepto);
+            nuevoRegistro.setPeriodo(fechaInicio);
+            nuevoRegistro.setFechaLiquidacion(fechaActual);
+
+            detalleLiquidacionRepository.save(nuevoRegistro);
+            logger.info("Detalle de liquidación registrado para el empleado ID: {} y concepto ID: {}", empleadoId, conceptoId);
+
+        } catch (RuntimeException e) {
+            logger.error("Error al guardar detalle de liquidación para el empleado ID: {} y concepto ID: {}",
+                    empleadoId, conceptoId, e);
+        }
+    }
+
+    private int obtenerConceptoIdPorTipo(ConceptoTipo tipo) {
+        switch (tipo) {
+            case IMP_APORTES: return 91;
+            case IMP_GANANCIAS: return 92;
+            case IMP_INDEMNIZACION: return 93;
+            case SUELDO_TOTAL: return 94;
+            case IMP_AGUINALDO: return 95;
+            default: throw new IllegalArgumentException("Tipo de concepto no válido");
+        }
+    }
 }

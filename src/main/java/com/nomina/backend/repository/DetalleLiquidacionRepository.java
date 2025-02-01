@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import com.nomina.backend.dto.LiquidacionDetalleDTO;
+import com.nomina.backend.dto.ListadoNetoDTO;
 import com.nomina.backend.model.ConceptoSalarial;
 import com.nomina.backend.model.DetalleLiquidacion;
 import com.nomina.backend.model.Empleado;
@@ -28,10 +28,14 @@ import com.nomina.backend.model.Empleado;
 		List<DetalleLiquidacion> findByEmpleadoIdAndFechaLiquidacionBetween(Integer id, LocalDate fechaInicio, LocalDate fechaFin);
 	
 		List<DetalleLiquidacion> findByPeriodoBetween(Date fechaInicio, Date fechaFin);
+		
+		List<DetalleLiquidacion> findByConceptoSalarial_Id(Integer conceptoSalarialId);
 	
 		boolean existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, int conceptoId, Date fechaInicio);
 	
-	    List<DetalleLiquidacion> findByPeriodo(Date periodo);
+		boolean existsByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, Integer conceptoSalarialId, Date periodo);
+		
+		List<DetalleLiquidacion> findByPeriodo(Date periodo);
 		
 		List<DetalleLiquidacion> findByEmpleadoIdAndConceptoSalarialIdAndPeriodo(Integer empleadoId, Integer conceptoId,
 				java.util.Date periodo);
@@ -43,12 +47,12 @@ import com.nomina.backend.model.Empleado;
 	    Optional<DetalleLiquidacion> findByEmpleado_IdAndConceptoSalarial_IdAndFechaLiquidacion(Integer id,
 				Integer conceptoSalarialId, java.util.Date fechaLiquidacion);
 	
-		@Query("SELECT new com.nomina.backend.dto.LiquidacionDetalleDTO(e.id, e.apellido, e.nombre, dl.monto) " +
+		@Query("SELECT new com.nomina.backend.dto.ListadoNetoDTO(e.id, e.apellido, e.nombre, dl.monto) " +
 			       "FROM DetalleLiquidacion dl " +
 			       "JOIN dl.empleado e " +
 			       "WHERE dl.conceptoSalarial.id = 491 AND FUNCTION('MONTH', dl.periodo) = :mes " +
 			       "AND FUNCTION('YEAR', dl.periodo) = :anio")
-			List<LiquidacionDetalleDTO> findByConcepto491AndMesAndAnio(@Param("mes") int mes, @Param("anio") int anio);
+			List<ListadoNetoDTO> findByConcepto491AndMesAndAnio(@Param("mes") int mes, @Param("anio") int anio);
 	
 	    @Query("SELECT dl.monto FROM DetalleLiquidacion dl WHERE dl.empleado.id = :empleadoId AND dl.conceptoSalarial.id = :conceptoId")
 	    Integer obtenerValorConcepto(@Param("empleadoId") int empleadoId, @Param("conceptoId") int conceptoId);

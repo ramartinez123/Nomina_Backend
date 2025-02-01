@@ -9,7 +9,7 @@ public class NovedadLiquidacionDTO {
     private Integer idEmpleado;
     private Date fechaInicio;
     private Integer cantidad;
-
+    
     // Constructor
     public NovedadLiquidacionDTO(Integer id, Integer idConcepto, Integer idEmpleado, Date fechaInicio, Integer cantidad) {
         this.id = id;

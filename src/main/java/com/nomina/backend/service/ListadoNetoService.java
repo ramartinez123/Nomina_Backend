@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.nomina.backend.dto.LiquidacionDetalleDTO;
+import com.nomina.backend.dto.ListadoNetoDTO;
 import com.nomina.backend.repository.DetalleLiquidacionRepository;
 
 @Service
@@ -14,7 +13,7 @@ public class ListadoNetoService {
 	@Autowired
     private DetalleLiquidacionRepository detalleLiquidacionRepository;
 
-    public List<LiquidacionDetalleDTO> obtenerLiquidacionesPorConcepto491(int mes, int anio) {
+    public List<ListadoNetoDTO> obtenerLiquidacionesPorConcepto491(int mes, int anio) {
         if (mes < 1 || mes > 12) {
             throw new IllegalArgumentException("El mes debe estar entre 1 y 12.");
         }

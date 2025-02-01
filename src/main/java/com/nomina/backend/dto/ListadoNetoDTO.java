@@ -1,13 +1,13 @@
 package com.nomina.backend.dto;
 
-public class LiquidacionDetalleDTO {
+public class ListadoNetoDTO {
     private int id;
     private String apellido;
     private String nombre;
     private Integer montoConcepto491;
 
     // Constructor
-    public LiquidacionDetalleDTO(int id, String apellido, String nombre, Integer montoConcepto491) {
+    public ListadoNetoDTO(int id, String apellido, String nombre, Integer montoConcepto491) {
         this.id = id;
         this.apellido = apellido;
         this.nombre = nombre;

@@ -1,7 +1,7 @@
 package com.nomina.backend.controller;
 
 import com.nomina.backend.dto.LiquidacionRespuestaDTO;
-import com.nomina.backend.service.DetalleLiquidacionService;
+import com.nomina.backend.service.ReciboLiquidacionService;
 
 import java.util.Calendar;
 
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "http://localhost:5173/")
 @RestController
 @RequestMapping("/api/liquidaciones")
-public class DetalleLiquidacionController {
+public class ReciboLiquidacionController {
 
     @Autowired
-    private DetalleLiquidacionService detalleLiquidacionService;
+    private ReciboLiquidacionService reciboLiquidacionService;
 
     @GetMapping("/periodo/{mes}/{anio}")
     public LiquidacionRespuestaDTO obtenerLiquidacionesPorPeriodo(@PathVariable int mes, @PathVariable int anio) {
@@ -26,6 +26,6 @@ public class DetalleLiquidacionController {
             throw new IllegalArgumentException("El año debe estar en un rango razonable.");
         }
 
-        return detalleLiquidacionService.obtenerLiquidacionesPorPeriodo(mes, anio);
+        return reciboLiquidacionService.obtenerLiquidacionesPorPeriodo(mes, anio);
     }
 }

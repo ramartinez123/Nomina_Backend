@@ -11,22 +11,17 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.nomina.backend.Iservice.IcategoriaService;
 import com.nomina.backend.Iservice.IconvenioService;
 import com.nomina.backend.Iservice.IempleadoService;
-import com.nomina.backend.Iservice.IprovinciaService;
 import com.nomina.backend.Iservice.IpuestoService;
 import com.nomina.backend.Iservice.IdepartamentoService;
-import com.nomina.backend.Iservice.IobraSocialService;
 import com.nomina.backend.Iservice.IbancoService;
 import com.nomina.backend.dto.EmpleadoDTO;
 import com.nomina.backend.dto.EmpleadoViews;
-import com.nomina.backend.dto.ObraSocialDTO;
 import com.nomina.backend.model.Banco;
 import com.nomina.backend.model.Convenio;
 import com.nomina.backend.model.Empleado;
 import com.nomina.backend.model.EstadoCivil;
 import com.nomina.backend.model.EstadoEmpleado;
 import com.nomina.backend.model.Genero;
-import com.nomina.backend.model.ObraSocial;
-import com.nomina.backend.model.Provincia;
 import com.nomina.backend.model.Puesto;
 import com.nomina.backend.model.TipoContrato;
 import com.nomina.backend.model.TipoCuentaBancaria;
@@ -48,9 +43,6 @@ public class EmpleadoController {
 	private IconvenioService convenioService;
 
 	@Autowired
-	private IprovinciaService provinciaService;
-
-	@Autowired
 	private IpuestoService puestoService;
 
 	@Autowired
@@ -58,9 +50,6 @@ public class EmpleadoController {
 
 	@Autowired
 	private IbancoService bancoService;
-
-	@Autowired
-	private IobraSocialService obraSocialService;
 
 
 
@@ -155,12 +144,12 @@ public class EmpleadoController {
 						.body("Categoria no encontrada.");
 			}
 
-			// Validar que la provincia existe
+			/* Validar que la provincia existe
 			Optional<Provincia> provinciaOpt = provinciaService.findById(empleadoDTO.getIdProvincia());
 			if (!provinciaOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Provincia no encontrada.");
-			}
+			}*/
 
 			// Validar que el puesto existe
 			Optional<Puesto> puestoOpt = puestoService.findById(empleadoDTO.getIdPuesto());
@@ -176,11 +165,11 @@ public class EmpleadoController {
 						.body("Banco no encontrado.");
 			}
 
-			Optional<ObraSocial> obraSocialOpt = obraSocialService.findById(empleadoDTO.getIdBanco());
+			/*Optional<ObraSocial> obraSocialOpt = obraSocialService.findById(empleadoDTO.getIdBanco());
 			if (!bancoOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Obra Social no encontrado.");
-			}
+			}*/
 
 
 			String estadoEmpleadoStr = empleadoDTO.getEstadoEmpleado();
@@ -247,7 +236,7 @@ public class EmpleadoController {
 			empleado.setTelefono(empleadoDTO.getTelefono());
 			empleado.setDireccion(empleadoDTO.getDireccion());
 			empleado.setCiudad(empleadoDTO.getCiudad());
-			empleado.setProvincia(provinciaOpt.get());
+			//empleado.setProvincia(provinciaOpt.get());
 			empleado.setDepartamento(departamentoOpt.get());
 			empleado.setConvenio(convenioOpt.get());
 			empleado.setCategoria(categoriaOpt.get());
@@ -259,7 +248,7 @@ public class EmpleadoController {
 			empleado.setNacionalidad(empleadoDTO.getNacionalidad());
 			empleado.setEstadoCivil(estadoCivil);
 			empleado.setGenero(genero);
-			empleado.setObraSocial(obraSocialOpt.get());
+			//empleado.setObraSocial(obraSocialOpt.get());
 			empleado.setCbu(empleadoDTO.getCbu());
 			empleado.setBanco(bancoOpt.get());
 			empleado.setTipoCuentaBancaria(tipoCuentaBancaria);
@@ -312,11 +301,11 @@ public class EmpleadoController {
 			}
 
 			// Validar que la provincia existe
-			Optional<Provincia> provinciaOpt = provinciaService.findById(empleadoDTO.getIdProvincia());
+			/*Optional<Provincia> provinciaOpt = provinciaService.findById(empleadoDTO.getIdProvincia());
 			if (!provinciaOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Provincia no encontrada.");
-			}
+			}*/
 
 			// Validar que el puesto existe
 			Optional<Puesto> puestoOpt = puestoService.findById(empleadoDTO.getIdPuesto());
@@ -331,10 +320,10 @@ public class EmpleadoController {
 						.body("Banco no encontrado.");
 			}
 
-			if (!obraSocialOpt.isPresent()) {
+			/*if (!obraSocialOpt.isPresent()) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body("Obra Social no encontrada.");
-			}
+			}*/
 
 			// Obtener el empleado existente
 			Empleado existingEmpleado = existingEmpleadoOpt.get();
@@ -389,7 +378,7 @@ public class EmpleadoController {
 			existingEmpleado.setTelefono(empleadoDTO.getTelefono());
 			existingEmpleado.setDireccion(empleadoDTO.getDireccion());
 			existingEmpleado.setCiudad(empleadoDTO.getCiudad());
-			existingEmpleado.setProvincia(provinciaOpt.get());
+			//existingEmpleado.setProvincia(provinciaOpt.get());
 			existingEmpleado.setDepartamento(departamentoOpt.get());
 			existingEmpleado.setConvenio(convenioOpt.get());
 			existingEmpleado.setCategoria(categoriaOpt.get());
@@ -401,7 +390,7 @@ public class EmpleadoController {
 			existingEmpleado.setNacionalidad(empleadoDTO.getNacionalidad());
 			existingEmpleado.setEstadoCivil(estadoCivil);
 			existingEmpleado.setGenero(genero);
-			existingEmpleado.setObraSocial(obraSocialOpt.get());
+			//existingEmpleado.setObraSocial(obraSocialOpt.get());
 			existingEmpleado.setCbu(empleadoDTO.getCbu());
 			existingEmpleado.setBanco(bancoOpt.get());
 			existingEmpleado.setTipoCuentaBancaria(tipoCuentaBancaria);

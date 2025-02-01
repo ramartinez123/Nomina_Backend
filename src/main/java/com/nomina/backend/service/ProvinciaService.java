@@ -1,59 +1,62 @@
 package com.nomina.backend.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.nomina.backend.Iservice.IprovinciaService;
+import com.nomina.backend.dto.ProvinciaDTO;
+import com.nomina.backend.model.Provincia;
+import com.nomina.backend.repository.ProvinciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.nomina.backend.Iservice.IprovinciaService;
-import com.nomina.backend.model.Provincia;
-import com.nomina.backend.repository.ProvinciaRepository; // Asegúrate de que este repositorio existe
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProvinciaService implements IprovinciaService {
 
     @Autowired
-    private ProvinciaRepository provinciaRepository; 
+    private ProvinciaRepository provinciaRepository;
 
-    @Override
-    public List<Provincia> listProvincia() {
-        return provinciaRepository.findAll(); 
+    // Listar todas las provincias
+    public List<ProvinciaDTO> listarProvincias() {
+        List<Provincia> provincias = (List<Provincia>) provinciaRepository.findAll();
+        return provincias.stream()
+                         .map(this::convertToDTO)
+                         .collect(Collectors.toList());
     }
 
-    @Override
-	public Optional<Provincia> findById(Integer id) {
-		return provinciaRepository.findById(id);
-	}
+    // Obtener una provincia por ID
+    public Optional<ProvinciaDTO> getProvinciaById(int id) {
+        return provinciaRepository.findById(id).map(this::convertToDTO);
+    }
 
-    @Override
-    public int saveProvincia(Provincia provincia) {
-        try {
-            Provincia savedProvincia = provinciaRepository.save(provincia); 
-            return savedProvincia.getIdProvincia(); 
-        } catch (Exception e) {
-            System.err.println("Error al guardar la provincia: " + e.getMessage());
-            return -1;
+    // Crear una nueva provincia
+    public ProvinciaDTO createProvincia(ProvinciaDTO provinciaDTO) {
+        Provincia provincia = new Provincia();
+        provincia.setNombre(provinciaDTO.getNombre());
+
+        Provincia provinciaGuardada = provinciaRepository.save(provincia);
+        return convertToDTO(provinciaGuardada);
+    }
+
+    // Actualizar una provincia
+    public ProvinciaDTO updateProvincia(int id, ProvinciaDTO provinciaDTO) {
+        Optional<Provincia> provinciaExistente = provinciaRepository.findById(id);
+        if (provinciaExistente.isPresent()) {
+            Provincia provincia = provinciaExistente.get();
+            provincia.setNombre(provinciaDTO.getNombre());
+
+            Provincia provinciaActualizada = provinciaRepository.save(provincia);
+            return convertToDTO(provinciaActualizada);
+        } else {
+            throw new RuntimeException("Provincia no encontrada");
         }
     }
 
-    @Override
-    public boolean deleteProvincia(int id) {
-        try {
-            if (provinciaRepository.existsById(id)) { 
-                provinciaRepository.deleteById(id);
-                return true; 
-            } else {
-                return false; 
-            }
-        } catch (Exception e) {
-            System.err.println("Error al eliminar la provincia: " + e.getMessage());
-            return false; 
-        }
+    // Convertir de Provincia a ProvinciaDTO
+    private ProvinciaDTO convertToDTO(Provincia provincia) {
+        return new ProvinciaDTO(provincia.getIdProvincia(), provincia.getNombre());
     }
 
-    @Override
-    public List<Provincia> findByNombre(String nombre) {
-        return provinciaRepository.findByNombreIgnoreCase(nombre); 
-    }
+
 }

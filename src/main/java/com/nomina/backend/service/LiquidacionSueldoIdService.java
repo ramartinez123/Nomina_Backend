@@ -69,7 +69,7 @@ public class LiquidacionSueldoIdService {
 	        guardarDetalleLiquidacion(empleado, salarioExcedente.getValor(), salarioExcedente.getConceptoSalarial().getId(), fechaLiquidacion, periodo);
 	    }
 	    
-	    liquidacionServiceNovedades.procesarNovedades();
+	    liquidacionServiceNovedades.procesarNovedades(empleado);
 	    
 	}
 

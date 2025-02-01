@@ -12,127 +12,110 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 @Service
 public class LiquidacionRetencionesService {
 
-	private static final Logger logger = LoggerFactory.getLogger(LiquidacionRetencionesService.class);
+    private static final Logger logger = LoggerFactory.getLogger(LiquidacionRetencionesService.class);
+    private static final int[] CONCEPTO_IDS = {101, 102, 103};
+    private static final int CONCEPTO_ID_91 = 91;
 
-	@Autowired
-	private DetalleLiquidacionRepository detalleLiquidacionRepository;
+    @Autowired
+    private DetalleLiquidacionRepository detalleLiquidacionRepository;
+    @Autowired
+    private ConceptoSalarialRepository conceptoSalarialRepository;
+    @Autowired
+    private NovedadLiquidacionRepository novedadLiquidacionRepository;
+    @Autowired
+    private LiquidacionTotalesRetencionesService liquidacionTotalesRetencionesService;
 
-	@Autowired
-	private ConceptoSalarialRepository conceptoSalarialRepository;
+    private final Calendar calendar = Calendar.getInstance();
 
-	@Autowired
-	private LiquidacionTotalesRetencionesService liquidacionTotalesRetencionesService;
+    public void procesarYRegistrarNuevosDetalles() {
+        Date fechaInicio = obtenerFechaInicioDelMes();
+        Date fechaActual = new Date(System.currentTimeMillis());
 
-	@Autowired
-	private NovedadLiquidacionRepository novedadLiquidacionRepository;
+        List<DetalleLiquidacion> detalles = obtenerDetallesConcepto(CONCEPTO_ID_91);
+        ConceptoSalarial[] conceptos = obtenerConceptos(CONCEPTO_IDS);
 
-	Calendar calendar = Calendar.getInstance();
-	private static final int CONCEPTO_ID_91 = 91;
-	private static final int CONCEPTO_ID_101 = 101;
-	private static final int CONCEPTO_ID_102 = 102;
-	private static final int CONCEPTO_ID_103 = 103;
+        procesarDetalles(detalles, conceptos, fechaInicio, fechaActual);
+        procesarNovedades(List.of(185, 285), fechaInicio, fechaActual);
 
-	public void procesarYRegistrarNuevosDetalles() {
+        liquidacionTotalesRetencionesService.sumarConceptosYRegistrar();
+    }
 
-		Date fechaActual = new Date(System.currentTimeMillis());
-		Date fechaInicio = obtenerFechaInicioDelMes();   
-		Date fechaFin = new Date(calendar.getTimeInMillis());
-		logger.info("Fecha de inicio del mes: {}", fechaInicio);
+    private List<DetalleLiquidacion> obtenerDetallesConcepto(int conceptoId) {
+        List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByConceptoSalarial_Id(conceptoId);
+        logger.info("Número de detalles obtenidos para concepto {}: {}", conceptoId, detalles.size());
+        return detalles;
+    }
 
-		// Obtener los registros del concepto 91
-		List<DetalleLiquidacion> detalles = detalleLiquidacionRepository.findByConceptoSalarial_Id(CONCEPTO_ID_91);
-		logger.info("Número de detalles obtenidos para concepto 91: {}", detalles.size());
+    private ConceptoSalarial[] obtenerConceptos(int[] ids) {
+        return Arrays.stream(ids)
+            .mapToObj(id -> conceptoSalarialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("ConceptoSalarial " + id + " no encontrado")))
+            .toArray(ConceptoSalarial[]::new);
+    }
 
-		// Obtener conceptos
-		ConceptoSalarial[] conceptos = {
-				conceptoSalarialRepository.findById(CONCEPTO_ID_101).orElseThrow(() -> new RuntimeException("ConceptoSalarial 101 no encontrado")),
-				conceptoSalarialRepository.findById(CONCEPTO_ID_102).orElseThrow(() -> new RuntimeException("ConceptoSalarial 102 no encontrado")),
-				conceptoSalarialRepository.findById(CONCEPTO_ID_103).orElseThrow(() -> new RuntimeException("ConceptoSalarial 103 no encontrado"))
-		};
+    private void procesarDetalles(List<DetalleLiquidacion> detalles, ConceptoSalarial[] conceptos, Date fechaInicio, Date fechaActual) {
+        detalles.stream()
+            .filter(this::validarDetalle)
+            .filter(detalle -> ((Date) detalle.getFechaLiquidacion()).toLocalDate().isEqual(fechaActual.toLocalDate()))
+            .forEach(detalle -> {
+                for (ConceptoSalarial concepto : conceptos) {
+                    int montoFinal = calcularMonto(detalle.getMonto(), concepto.getValor());
+                    guardarNuevoDetalle(detalle.getEmpleado(), montoFinal, concepto, fechaInicio, fechaActual);
+                }
+            });
+    }
 
-		for (DetalleLiquidacion detalle : detalles) {
+    private void procesarNovedades(List<Integer> conceptoIds, Date fechaInicio, Date fechaFin) {
+        List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
 
-			if (!validarDetalle(detalle)) continue;
+        novedades.stream()
+            .filter(novedad -> novedad.getEmpleado() != null && novedad.getCantidad() > 0)
+            .forEach(novedad -> guardarNuevoDetalle(
+                novedad.getEmpleado(),
+                novedad.getCantidad(),
+                novedad.getConcepto(),
+                fechaInicio,
+                new Date(System.currentTimeMillis())
+            ));
+    }
 
-			// Filtrar por fecha de liquidación y empleado
-			if (((Date) detalle.getFechaLiquidacion()).toLocalDate().isEqual(fechaActual.toLocalDate()) && detalle.getEmpleado() != null) {
-				for (ConceptoSalarial concepto : conceptos) {
-					int montoFinal = calcularMonto(detalle.getMonto(), concepto.getValor());
-					logger.info("Guardando nuevo detalle para empleado: {}, monto final: {}, concepto: {}", detalle.getEmpleado().getId(), montoFinal, concepto.getId());
-					guardarNuevoDetalle(detalle.getEmpleado(), montoFinal, concepto, fechaInicio, fechaActual);
-				}
-			}
-		}
+    private boolean validarDetalle(DetalleLiquidacion detalle) {
+        if (detalle.getEmpleado() == null) {
+            logger.warn("Detalle sin empleado, se omite: {}", detalle);
+            return false;
+        }
+        if (detalle.getMonto() <= 0) {
+            logger.warn("Monto no válido para detalle, se omite: {}", detalle);
+            return false;
+        }
+        return true;
+    }
 
-		List<Integer> conceptoIds = List.of(185,285);        
-		List<NovedadLiquidacion> novedades = novedadLiquidacionRepository.findByConceptoSalarialIdAndFecha(conceptoIds, fechaInicio, fechaFin);
+    private int calcularMonto(int monto, int valor) {
+        return monto * valor / 100;
+    }
 
-		for (NovedadLiquidacion novedad : novedades) {
-			Integer cantidadNovedades = novedad.getCantidad();
+    private void guardarNuevoDetalle(Empleado empleado, int monto, ConceptoSalarial concepto, Date periodo, Date fechaLiquidacion) {
+        DetalleLiquidacion detalle = new DetalleLiquidacion();
+        detalle.setEmpleado(empleado);
+        detalle.setMonto(monto);
+        detalle.setConceptoSalarial(concepto);
+        detalle.setPeriodo(periodo);
+        detalle.setFechaLiquidacion(fechaLiquidacion);
+        detalleLiquidacionRepository.save(detalle);
+        logger.info("Detalle guardado: empleado={}, monto={}, concepto={}", empleado.getId(), monto, concepto.getId());
+    }
 
-			if (novedad.getEmpleado() == null) {
-				logger.warn("Novedad sin empleado, se omite: {}", novedad);
-				continue;
-			}
-			if (cantidadNovedades <= 0) {
-				logger.warn("Cantidad de novedades no válida, se omite: {}", novedad);
-				continue;
-			}
-
-			// Verificar el concepto para aplicar la fórmula adecuada
-			if (novedad.getConcepto().getId() == 185) {
-				int resultado =  cantidadNovedades;
-
-				if (novedad.getEmpleado() != null) {
-					logger.info("Guardando nuevo detalle por novedad: empleado: {}, resultado: {}, concepto: {}", novedad.getEmpleado().getId(), resultado, novedad.getConcepto().getId());
-					guardarNuevoDetalle(novedad.getEmpleado(), resultado, novedad.getConcepto(), fechaInicio, fechaActual);
-				}               
-			}else if (novedad.getConcepto().getId() == 285) {
-				int resultado =  cantidadNovedades; 
-
-				if (novedad.getEmpleado() != null) {
-					logger.info("Guardando nuevo detalle por novedad: empleado: {}, resultado: {}, concepto: {}", novedad.getEmpleado().getId(), resultado, novedad.getConcepto().getId());
-					guardarNuevoDetalle(novedad.getEmpleado(), resultado, novedad.getConcepto(), fechaInicio, fechaActual);
-				}   
-			}
-		}
-		liquidacionTotalesRetencionesService.sumarConceptosYRegistrar();
-	}
-
-	private Date obtenerFechaInicioDelMes() {
-		calendar.set(Calendar.DAY_OF_MONTH, 1);
-		return new Date(calendar.getTimeInMillis());
-	}
-
-	private int calcularMonto(int monto, int valor) {
-		return monto * valor / 100;
-	}
-
-	private boolean validarDetalle(DetalleLiquidacion detalle) {
-		if (detalle.getEmpleado() == null) {
-			logger.warn("Detalle sin empleado, se omite: {}", detalle);
-			return false;
-		}
-		if (detalle.getMonto() <= 0) {
-			logger.warn("Monto no válido para detalle, se omite: {}", detalle);
-			return false;
-		}
-		return true;
-	}
-
-	private void guardarNuevoDetalle(Empleado empleado, int montoFinal, ConceptoSalarial concepto, Date periodo, Date fechaLiquidacion) {
-		DetalleLiquidacion nuevoDetalle = new DetalleLiquidacion();
-		nuevoDetalle.setEmpleado(empleado);
-		nuevoDetalle.setMonto(montoFinal);
-		nuevoDetalle.setConceptoSalarial(concepto);
-		nuevoDetalle.setPeriodo(periodo);
-		nuevoDetalle.setFechaLiquidacion(fechaLiquidacion);
-		detalleLiquidacionRepository.save(nuevoDetalle);
-	}
+    private Date obtenerFechaInicioDelMes() {
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        return new Date(calendar.getTimeInMillis());
+    }
 }

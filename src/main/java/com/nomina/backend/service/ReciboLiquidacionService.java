@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class DetalleLiquidacionService {
+public class ReciboLiquidacionService {
 
     @Autowired
     private DetalleLiquidacionRepository detalleLiquidacionRepository;
